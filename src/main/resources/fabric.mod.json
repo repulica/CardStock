@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "cardstock",
+  "version": "${version}",
+  "name": "CardStock",
+  "description": "data-driven trading cards for fabric",
+  "authors": [
+    "repulica"
+  ],
+  "contact": {},
+  "license": "MPL-2.0",
+  "icon": "assets/cardstock/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "repulica.cardstock.CardStock"
+    ],
+    "client": [
+      "repulica.cardstock.client.CardStockClient"
+    ]
+  },
+  "mixins": [
+    "mixins.cardstock.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.4.0"
+  }
+}

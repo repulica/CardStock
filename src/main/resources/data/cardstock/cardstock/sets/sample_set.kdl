@@ -1,0 +1,15 @@
+emblem "cardstock:textures/gui/sample_emblem.png"
+card "sample_common" {
+    rarity 5
+    info text="5/5 blue kittey" color="aqua"
+    lore {
+        - {
+            - text="Rye is a " color="gray"
+            - text="pretty kitty" color="aqua"
+            - text="," color="gray"
+        }
+        - text="and everyone knows it!" color="gray"
+    }
+    artist "kat"
+    date "2020"
+}

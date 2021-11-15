@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "package": "repulica.cardstock.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "MixinPlayerManager",
+    "MixinLootManager"
+  ],
+  "client": [
+    "MixinScreen"
+  ]
+}
