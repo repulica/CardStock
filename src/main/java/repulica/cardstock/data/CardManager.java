@@ -50,14 +50,14 @@ public class CardManager implements SimpleSynchronousResourceReloadListener {
 			try {
 				Identifier setId = new Identifier(id.getNamespace(), id.getPath().substring(PREFIX.length() + 1, id.getPath().length() - SUFFIX_LENGTH));
 				KDLDocument doc = PARSER.parse(manager.getResource(id).getInputStream());
-				Identifier emblem = new Identifier(CardStock.MODID, "textures/gui/sample_emblem.png");
+				Identifier emblem = new Identifier(CardStock.MODID, "textures/gui/missingno.png");
 				Map<String, Card> parsedCards = new HashMap<>();
 				for (KDLNode node : doc.getNodes()) {
 					if (node.getIdentifier().equals("emblem")) {
 						emblem = new Identifier(node.getArgs().get(0).getAsString().getValue());
 					} else if (node.getIdentifier().equals("card")) {
 						String name = node.getArgs().get(0).getAsString().getValue();
-						int rarity = 1;
+						int rarity = 0;
 						Text info = new LiteralText("");
 						List<Text> lore = new ArrayList<>();
 						String artist = "";
@@ -87,6 +87,7 @@ public class CardManager implements SimpleSynchronousResourceReloadListener {
 							}
 						}
 						parsedCards.put(name, new Card(rarity, info, lore, artist, date));
+						cardCount++;
 					}
 				}
 				sets.put(setId, new CardSet(emblem, parsedCards));
@@ -99,7 +100,6 @@ public class CardManager implements SimpleSynchronousResourceReloadListener {
 	}
 
 	private Text parseText(KDLNode node) {
-		System.out.println(node.toKDL());
 		//json hacks are the easiest thing to do here honestly
 		if (node.getProps().size() == 0 && node.getChild().isPresent()) {
 			//just a list of texts

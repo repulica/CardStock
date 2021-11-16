@@ -3,10 +3,13 @@
   "package": "repulica.cardstock.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "MixinPlayerManager",
-    "MixinLootManager"
+    "MixinLootManager",
+    "MixinPlayerManager"
   ],
   "client": [
+    "MixinItemRenderer",
+    "MixinJsonUnbakedModel",
+    "MixinModelLoader",
     "MixinScreen"
   ]
 }

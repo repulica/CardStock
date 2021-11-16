@@ -1,8 +1,6 @@
 {
-  "parent": "item/generated",
+  "parent": "cardstock:item/foil_card",
   "textures": {
-    "layer0": "cardstock:item/card_missingno",
-    "layer1": "cardstock:item/card_foil",
-    "layer2": "cardstock:item/card_superfoil"
+    "layer0": "cardstock:item/card_missingno"
   }
 }

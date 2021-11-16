@@ -1,7 +1,6 @@
 {
-  "parent": "minecraft:item/generated",
+  "parent": "builtin/generated",
   "textures": {
-    "layer0": "cardstock:item/card_missingno",
-    "layer`": "cardstock:item/card_foil"
+    "layer0": "cardstock:item/card_missingno"
   }
 }
