@@ -9,11 +9,13 @@ import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 import repulica.cardstock.CardStock;
 
-public class CardModelVariantProvider implements ModelVariantProvider {
+public class DynamicModelVariantProvider implements ModelVariantProvider {
 	private static final ModelIdentifier CARD = new ModelIdentifier(new Identifier(CardStock.MODID, "card"), "inventory");
+	private static final ModelIdentifier PACK = new ModelIdentifier(new Identifier(CardStock.MODID, "card_pack"), "inventory");
+
 	@Override
 	public @Nullable UnbakedModel loadModelVariant(ModelIdentifier modelId, ModelProviderContext context) throws ModelProviderException {
-		if (modelId.equals(CARD)) return new CardModel();
+		if (modelId.equals(CARD) || modelId.equals(PACK)) return new DynamicModel();
 		return null;
 	}
 }

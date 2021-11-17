@@ -19,29 +19,43 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockRenderView;
 import org.jetbrains.annotations.Nullable;
+import org.lwjgl.system.CallbackI;
 import repulica.cardstock.CardStock;
 
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class CardModel implements BakedModel, FabricBakedModel, UnbakedModel {
+public class DynamicModel implements BakedModel, FabricBakedModel, UnbakedModel {
 	private static final BakedModelManager MANAGER = MinecraftClient.getInstance().getBakedModelManager();
 	private static final Identifier ITEM_GENERATED = new Identifier("minecraft:item/generated");
-	private static final ModelIdentifier MISSINGNO = new ModelIdentifier(new Identifier(CardStock.MODID, "card/missingno/missingno"), "inventory");
+	private static final ModelIdentifier MISSINGNO_CARD = new ModelIdentifier(new Identifier(CardStock.MODID, "card/missingno/missingno"), "inventory");
+	private static final ModelIdentifier MISSINGNO_PACK = new ModelIdentifier(new Identifier(CardStock.MODID, "pack/missingno"), "inventory");
 	private ModelTransformation transformation;
 
-	public CardModel() {
+	public DynamicModel() {
 	}
 
 	@Override
 	public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
-		if (stack.hasTag() && stack.getTag().contains("Card", NbtType.STRING)) {
-			Identifier cardId = new Identifier(stack.getTag().getString("Card"));
-			ModelIdentifier modelId = new ModelIdentifier(new Identifier(cardId.getNamespace(), "card/" + cardId.getPath()), "inventory");
-			((FabricBakedModel) MANAGER.getModel(modelId)).emitItemQuads(stack, randomSupplier, context);
+		if (stack.getItem() == CardStock.CARD) {
+			if (stack.hasTag() && stack.getTag().contains("Card", NbtType.STRING)) {
+				Identifier cardId = new Identifier(stack.getTag().getString("Card"));
+				ModelIdentifier modelId = new ModelIdentifier(new Identifier(cardId.getNamespace(), "card/" + cardId.getPath()), "inventory");
+				((FabricBakedModel) MANAGER.getModel(modelId)).emitItemQuads(stack, randomSupplier, context);
+			} else {
+				((FabricBakedModel) MANAGER.getModel(MISSINGNO_CARD)).emitItemQuads(stack, randomSupplier, context);
+			}
+		} else if (stack.getItem() == CardStock.CARD_PACK) {
+			if (stack.hasTag() && stack.getTag().contains("Pack", NbtType.STRING)) {
+				Identifier packId = new Identifier(stack.getTag().getString("Pack"));
+				ModelIdentifier modelId = new ModelIdentifier(new Identifier(packId.getNamespace(), "pack/" + packId.getPath().substring("packs/".length())), "inventory");
+				((FabricBakedModel) MANAGER.getModel(modelId)).emitItemQuads(stack, randomSupplier, context);
+			} else {
+				((FabricBakedModel) MANAGER.getModel(MISSINGNO_PACK)).emitItemQuads(stack, randomSupplier, context);
+			}
 		} else {
-			((FabricBakedModel) MANAGER.getModel(MISSINGNO)).emitItemQuads(stack, randomSupplier, context);
+			((FabricBakedModel) MANAGER.getMissingModel()).emitItemQuads(stack, randomSupplier, context);
 		}
 	}
 
@@ -95,7 +109,7 @@ public class CardModel implements BakedModel, FabricBakedModel, UnbakedModel {
 
 	@Override
 	public Collection<Identifier> getModelDependencies() {
-		return Collections.singleton(MISSINGNO);
+		return Collections.singleton(MISSINGNO_CARD);
 	}
 
 	@Override

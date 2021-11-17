@@ -1,5 +1,8 @@
 {
   "item.cardstock.card": "Missing Card",
+  "item.cardstock.card_binder": "Card Binder",
+  "item.cardstock.ender_card_binder": "Ender Card Binder",
+  "item.cardstock.card_pack": "Card Pack",
   "text.cardstock.artist": "Artwork © %s %s",
   "text.cardstock.missingno": "Where§ka§rdid§ka§ryou§ka§rget§ka§rthis?",
   "text.cardstock.more": "Press §aSHIFT§r for more",

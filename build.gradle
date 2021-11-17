@@ -23,9 +23,11 @@ dependencies {
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 	modApi "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:${project.cardinal_version}"
 	modImplementation "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:${project.cardinal_version}"
+	modImplementation "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-item:${project.cardinal_version}"
 	implementation name: "kdl4j-0.1.0"
 	include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:${project.cardinal_version}"
 	include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:${project.cardinal_version}"
+	include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-item:${project.cardinal_version}"
 	include name: "kdl4j-0.1.0"
 
 	// PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
