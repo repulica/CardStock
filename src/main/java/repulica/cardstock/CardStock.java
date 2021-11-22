@@ -4,6 +4,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import net.fabricmc.fabric.api.object.builder.v1.advancement.CriterionRegistry;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
 import net.minecraft.item.Item;
@@ -16,9 +17,10 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import repulica.cardstock.api.CardManager;
 import repulica.cardstock.component.CardBinderInventory;
-import repulica.cardstock.data.CardManager;
 import repulica.cardstock.data.CardPackLootFunction;
+import repulica.cardstock.data.CardPullCriterion;
 import repulica.cardstock.item.CardBinderItem;
 import repulica.cardstock.item.CardItem;
 import repulica.cardstock.item.CardPackItem;
@@ -31,11 +33,13 @@ public class CardStock implements ModInitializer {
 
 	//todo: non-card group
 	public static final Item CARD = Registry.register(Registry.ITEM, new Identifier(MODID, "card"), new CardItem(new Item.Settings().maxCount(4)));
-	public static final Item CARD_BINDER = Registry.register(Registry.ITEM, new Identifier(MODID, "card_binder"), new CardBinderItem(new Item.Settings().maxCount(1)));
-	public static final Item ENDER_CARD_BINDER = Registry.register(Registry.ITEM, new Identifier(MODID, "ender_card_binder"), new EnderCardBinderItem(new Item.Settings().maxCount(1)));
-	public static final Item CARD_PACK = Registry.register(Registry.ITEM, new Identifier(MODID, "card_pack"), new CardPackItem(new Item.Settings().maxCount(1)));
+	public static final Item CARD_BINDER = Registry.register(Registry.ITEM, new Identifier(MODID, "card_binder"), new CardBinderItem(new Item.Settings().maxCount(1).group(ItemGroup.MISC)));
+	public static final Item ENDER_CARD_BINDER = Registry.register(Registry.ITEM, new Identifier(MODID, "ender_card_binder"), new EnderCardBinderItem(new Item.Settings().maxCount(1).group(ItemGroup.MISC)));
+	public static final Item CARD_PACK = Registry.register(Registry.ITEM, new Identifier(MODID, "card_pack"), new CardPackItem(new Item.Settings().maxCount(1))); //todo: should this go in a group at all
 
 	public static ScreenHandlerType<GenericContainerScreenHandler> CARD_BINDER_HANDLER;
+
+	public static final CardPullCriterion CARD_PULL = CriterionRegistry.register(new CardPullCriterion());
 
 	//todo: possible to be random card?
 	public static final ItemGroup CARDS_GROUP = FabricItemGroupBuilder.create(new Identifier(MODID, "cards"))
@@ -51,4 +55,5 @@ public class CardStock implements ModInitializer {
 		ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> sender.sendPacket(CARD_SYNC, CardManager.INSTANCE.getBuf()));
 		ClientPlayNetworking.registerGlobalReceiver(CARD_SYNC, (server, handler, buf, responseSender) -> CardManager.INSTANCE.recievePacket(buf));
 	}
+
 }

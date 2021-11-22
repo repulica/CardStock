@@ -1,5 +1,5 @@
 {
-  "parent": "builtin/generated",
+  "parent": "cardstock:builtin/card",
   "textures": {
     "layer1": "cardstock:item/card_foil_1",
     "layer2": "cardstock:item/card_foil_2",

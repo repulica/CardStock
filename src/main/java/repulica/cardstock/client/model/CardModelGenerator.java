@@ -9,6 +9,7 @@ import net.minecraft.client.render.model.json.ModelElementFace;
 import net.minecraft.client.render.model.json.ModelElementTexture;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.SpriteIdentifier;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3f;
 
@@ -17,7 +18,6 @@ import java.util.Map;
 import java.util.function.Function;
 
 //alternate version of ItemModelGenerator that makes them half as thick
-//todo: fix (doesnt work for some reason no idea why)
 public class CardModelGenerator {
 	public static final List<String> LAYERS = Lists.newArrayList("layer0", "layer1", "layer2", "layer3", "layer4");
 
@@ -59,82 +59,82 @@ public class CardModelGenerator {
 		List<ModelElement> list = Lists.newArrayList();
 
 		for (Frame frame : getFrames(sprite)) {
-			float h = 0.0F;
-			float i = 0.0F;
-			float j = 0.0F;
-			float k = 0.0F;
-			float l = 0.0F;
-			float m = 0.0F;
-			float n = 0.0F;
-			float o = 0.0F;
-			float p = 16.0F / width;
-			float q = 16.0F / height;
+			float x1 = 0.0F;
+			float y1 = 0.0F;
+			float x2 = 0.0F;
+			float y2 = 0.0F;
+			float u1 = 0.0F;
+			float u2 = 0.0F;
+			float v1 = 0.0F;
+			float v2 = 0.0F;
+			float frameWidth = 16.0F / width;
+			float frameHeight = 16.0F / height;
 			float min = (float)frame.getMin();
 			float max = (float)frame.getMax();
 			float level = (float)frame.getLevel();
 			Side side = frame.getSide();
 			switch(side) {
 				case UP:
-					l = min;
-					h = min;
-					j = m = max + 1.0F;
-					n = level;
-					i = level;
-					k = level;
-					o = level + 1.0F;
+					u1 = min;
+					x1 = min;
+					x2 = u2 = max + 1.0F;
+					v1 = level;
+					y1 = level;
+					y2 = level;
+					v2 = level + 1.0F;
 					break;
 				case DOWN:
-					n = level;
-					o = level + 1.0F;
-					l = min;
-					h = min;
-					j = m = max + 1.0F;
-					i = level + 1.0F;
-					k = level + 1.0F;
+					v1 = level;
+					v2 = level + 1.0F;
+					u1 = min;
+					x1 = min;
+					x2 = u2 = max + 1.0F;
+					y1 = level + 1.0F;
+					y2 = level + 1.0F;
 					break;
 				case LEFT:
-					l = level;
-					h = level;
-					j = level;
-					m = level + 1.0F;
-					o = min;
-					i = min;
-					k = n = max + 1.0F;
+					u1 = level;
+					x1 = level;
+					x2 = level;
+					u2 = level + 1.0F;
+					v2 = min;
+					y1 = min;
+					y2 = v1 = max + 1.0F;
 					break;
 				case RIGHT:
-					l = level;
-					m = level + 1.0F;
-					h = level + 1.0F;
-					j = level + 1.0F;
-					o = min;
-					i = min;
-					k = n = max + 1.0F;
+					u1 = level;
+					u2 = level + 1.0F;
+					x1 = level + 1.0F;
+					x2 = level + 1.0F;
+					v2 = min;
+					y1 = min;
+					y2 = v1 = max + 1.0F;
 			}
 
-			h *= p;
-			j *= p;
-			i *= q;
-			k *= q;
-			i = 16.0F - i;
-			k = 16.0F - k;
-			l *= p;
-			m *= p;
-			n *= q;
-			o *= q;
+			x1 *= frameWidth;
+			x2 *= frameWidth;
+			y1 *= frameHeight;
+			y2 *= frameHeight;
+			y1 = 16.0F - y1;
+			y2 = 16.0F - y2;
+			u1 *= frameWidth;
+			u2 *= frameWidth;
+			v1 *= frameHeight;
+			v2 *= frameHeight;
 			Map<Direction, ModelElementFace> map = Maps.newHashMap();
-			map.put(side.getDirection(), new ModelElementFace(null, layer, key, new ModelElementTexture(new float[]{l, n, m, o}, 0)));
+			map.put(side.getDirection(), new ModelElementFace(null, layer, key, new ModelElementTexture(new float[]{u1, v1, u2, v2}, 0)));
 			switch(side) {
 				case UP:
-					list.add(new ModelElement(new Vec3f(h, i, 7.75F), new Vec3f(j, i, 8.25F), map, null, true));
+					list.add(new ModelElement(new Vec3f(x1, y1, 7.75F), new Vec3f(x2, y1, 8.25F), map, null, true));
 					break;
 				case DOWN:
-					list.add(new ModelElement(new Vec3f(h, k, 7.75F), new Vec3f(j, k, 8.25F), map, null, true));
+					list.add(new ModelElement(new Vec3f(x1, y2, 7.75F), new Vec3f(x2, y2, 8.25F), map, null, true));
 					break;
 				case LEFT:
-					list.add(new ModelElement(new Vec3f(h, i, 7.75F), new Vec3f(h, k, 8.25F), map, null, true));
+					list.add(new ModelElement(new Vec3f(x1, y1, 7.75F), new Vec3f(x1, y2, 8.25F), map, null, true));
 					break;
 				case RIGHT:
-					list.add(new ModelElement(new Vec3f(j, i, 7.75F), new Vec3f(j, k, 8.25F), map, null, true));
+					list.add(new ModelElement(new Vec3f(x2, y1, 7.75F), new Vec3f(x2, y2, 8.25F), map, null, true));
 			}
 		}
 

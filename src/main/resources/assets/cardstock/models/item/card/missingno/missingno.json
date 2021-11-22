@@ -1,5 +1,5 @@
 {
-  "parent": "builtin/generated",
+  "parent": "cardstock:builtin/card",
   "textures": {
     "layer0": "cardstock:item/card_missingno"
   }

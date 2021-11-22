@@ -1,4 +1,4 @@
-package repulica.cardstock.data;
+package repulica.cardstock.api;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -8,6 +8,8 @@ import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.fabricmc.fabric.api.util.NbtType;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.resource.ResourceManager;
@@ -17,6 +19,9 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import repulica.cardstock.CardStock;
+import repulica.cardstock.component.CardBinderComponent;
+import repulica.cardstock.component.CardBinderInventory;
+import repulica.cardstock.component.CardStockComponents;
 
 import java.io.IOException;
 import java.util.*;
@@ -39,6 +44,137 @@ public class CardManager implements SimpleSynchronousResourceReloadListener {
 		this.defaultMissingnoSet = new CardSet(new Identifier(CardStock.MODID, "textures/gui/missingno.png"), setMap);
 		sets.put(new Identifier(CardStock.MODID, "missingno"), defaultMissingnoSet);
 	}
+
+	/**
+	 * @return a list of all the ids for card sets
+	 */
+	public Collection<Identifier> getSetIds() {
+		return sets.keySet();
+	}
+
+	/**
+	 * @param id the id of the set to get
+	 * @return the set with that id or the default missingno set
+	 */
+	public CardSet getSet(Identifier id) {
+		return sets.getOrDefault(id, defaultMissingnoSet);
+	}
+
+	/**
+	 * @param id the id of the card to get
+	 * @return the card with that id or the default missingno card
+	 */
+	public Card getCard(Identifier id) {
+		Identifier setId = new Identifier(id.getNamespace(), id.getPath().substring(0, id.getPath().lastIndexOf('/')));
+		String cardId = id.getPath().substring(id.getPath().lastIndexOf('/') + 1);
+		return getSet(setId).getCard(cardId);
+	}
+
+	/**
+	 * @param stack the stack to get the card set from
+	 * @return the set that card belongs to or the default missingno set
+	 */
+	public CardSet getSet(ItemStack stack) {
+		if (stack.hasTag() && stack.getTag().contains("Card", NbtType.STRING)) {
+			String cardName = stack.getTag().getString("Card");
+			return getSet(new Identifier(cardName.substring(0, cardName.lastIndexOf('/'))));
+		}
+		return defaultMissingnoSet;
+	}
+
+	/**
+	 * @param stack the stack to get the card from
+	 * @return the card this stack has or the default missingno card
+	 */
+	public Card getCard(ItemStack stack) {
+		if (stack.hasTag() && stack.getTag().contains("Card", NbtType.STRING)) {
+			return getCard(new Identifier(stack.getTag().getString("Card")));
+		}
+		return defaultMissingno;
+	}
+
+	/**
+	 * @param player the player to get cards for
+	 * @return a list of all cards currently held by the player in their inventory or card binders (including the ender binder)
+	 */
+	public List<Card> getAllHeldCards(PlayerEntity player) {
+		List<Card> cards = new ArrayList<>();
+		PlayerInventory inv = player.inventory;
+		if (!inv.isEmpty()) {
+			for (int i = 0; i < inv.size(); i++) {
+				ItemStack stack = inv.getStack(i);
+				if (stack.getItem() == CardStock.CARD && stack.getOrCreateTag().contains("Card")) {
+					cards.add(getCard(new Identifier(stack.getOrCreateTag().getString("Card"))));
+				} else if (CardStockComponents.CARD_BINDER.isProvidedBy(stack)) {
+					addBinderCards(cards, CardStockComponents.CARD_BINDER.get(stack));
+				}
+			}
+		}
+		addBinderCards(cards, CardStockComponents.CARD_BINDER.get(player));
+		return cards;
+	}
+
+	/**
+	 * @param player the player to get cards for
+	 * @param setId the id of the set to get cards for
+	 * @return a list of all cards in the given set currently held by the player in their inventory or card binders (including the ender binder)
+	 */
+	public List<Card> getHeldSetCards(PlayerEntity player, Identifier setId) {
+		CardSet set = getSet(setId);
+		List<Card> cards = new ArrayList<>();
+		PlayerInventory inv = player.inventory;
+		if (!inv.isEmpty()) {
+			for (int i = 0; i < inv.size(); i++) {
+				ItemStack stack = inv.getStack(i);
+				if (stack.getItem() == CardStock.CARD && stack.getOrCreateTag().contains("Card")) {
+					if (set == getSet(stack)) {
+						cards.add(getCard(new Identifier(stack.getOrCreateTag().getString("Card"))));
+					}
+				} else if (CardStockComponents.CARD_BINDER.isProvidedBy(stack)) {
+					addBinderSetCards(cards, CardStockComponents.CARD_BINDER.get(stack), set);
+				}
+			}
+		}
+		addBinderSetCards(cards, CardStockComponents.CARD_BINDER.get(player), set);
+		return cards;
+	}
+
+	/**
+	 * @param player the player to get progress for
+	 * @param setId the id of the set to get progress for
+	 * @return a percent value between 0 and 1 of how many cards in the set the player is currently holding in their inventory or card binders (including the ender binder)
+	 */
+	public float getHeldSetProgress(PlayerEntity player, Identifier setId) {
+		Set<Card> cards = new HashSet<>(getHeldSetCards(player, setId));
+		CardSet set = getSet(setId);
+		return (float) cards.size() / (float) set.getCards().size();
+	}
+
+	/**
+	 * @param player the player to check cards for
+	 * @param cardId the card to check for
+	 * @return whether the player has that card in their inventory or card binders (including the ender binder)
+	 */
+	public boolean hasCard(PlayerEntity player, Identifier cardId) {
+		Card card = getCard(cardId);
+		return getAllHeldCards(player).contains(card);
+	}
+
+	/**
+	 * @return the fallback set for when a set isnt found
+	 */
+	public CardSet getDefaultMissingnoSet() {
+		return defaultMissingnoSet;
+	}
+
+	/**
+	 * @return the fallback card for when a card isnt found
+	 */
+	public Card getDefaultMissingno() {
+		return defaultMissingno;
+	}
+
+	//non-api-intended stuff goes below here
 
 	@Override
 	public void reload(ResourceManager manager) {
@@ -95,8 +231,7 @@ public class CardManager implements SimpleSynchronousResourceReloadListener {
 				CardStock.LOGGER.error("Could not load card set " + id + ": " + e);
 			}
 		}
-		//todo: proper singulars
-		CardStock.LOGGER.info("Loaded " + sets.size() + " card sets, including " + cardCount + " cards");
+		CardStock.LOGGER.info("Loaded " + sets.size() + " card set" + (sets.size() > 1? "s" : "") + ", including " + cardCount + " card" + (cardCount > 1? "s" : ""));
 	}
 
 	private Text parseText(KDLNode node) {
@@ -155,41 +290,30 @@ public class CardManager implements SimpleSynchronousResourceReloadListener {
 		return new Identifier(CardStock.MODID, "card_manager");
 	}
 
-	public Collection<Identifier> getSetIds() {
-		return sets.keySet();
-	}
-
-	public CardSet getSet(Identifier id) {
-		return sets.getOrDefault(id, defaultMissingnoSet);
-	}
-
-	public Card getCard(Identifier id) {
-		Identifier setId = new Identifier(id.getNamespace(), id.getPath().substring(0, id.getPath().lastIndexOf('/')));
-		String cardId = id.getPath().substring(id.getPath().lastIndexOf('/') + 1);
-		return getSet(setId).getCard(cardId);
-	}
-
-	public CardSet getSet(ItemStack stack) {
-		if (stack.hasTag() && stack.getTag().contains("Card", NbtType.STRING)) {
-			String cardName = stack.getTag().getString("Card");
-			return getSet(new Identifier(cardName.substring(0, cardName.lastIndexOf('/'))));
+	private void addBinderCards(List<Card> cards, CardBinderComponent comp) {
+		CardBinderInventory binder = comp.getInv();
+		if (!binder.isEmpty()) {
+			for (int i = 0; i < binder.size(); i++) {
+				ItemStack card = binder.getStack(i);
+				if (card.getItem() == CardStock.CARD && card.getOrCreateTag().contains("Card")) {
+					cards.add(getCard(new Identifier(card.getOrCreateTag().getString("Card"))));
+				}
+			}
 		}
-		return getSet(new Identifier(CardStock.MODID, "missingno"));
 	}
 
-	public Card getCard(ItemStack stack) {
-		if (stack.hasTag() && stack.getTag().contains("Card", NbtType.STRING)) {
-			return getCard(new Identifier(stack.getTag().getString("Card")));
+	private void addBinderSetCards(List<Card> cards, CardBinderComponent comp, CardSet set) {
+		CardBinderInventory binder = comp.getInv();
+		if (!binder.isEmpty()) {
+			for (int i = 0; i < binder.size(); i++) {
+				ItemStack stack = binder.getStack(i);
+				if (stack.getItem() == CardStock.CARD && stack.getOrCreateTag().contains("Card")) {
+					if (set == getSet(stack)) {
+						cards.add(getCard(new Identifier(stack.getOrCreateTag().getString("Card"))));
+					}
+				}
+			}
 		}
-		return getCard(new Identifier(CardStock.MODID, "missingno/missingno"));
-	}
-
-	public CardSet getDefaultMissingnoSet() {
-		return defaultMissingnoSet;
-	}
-
-	public Card getDefaultMissingno() {
-		return defaultMissingno;
 	}
 
 	public void appendCards(List<ItemStack> toDisplay) {
@@ -208,7 +332,7 @@ public class CardManager implements SimpleSynchronousResourceReloadListener {
 		PacketByteBuf buf = PacketByteBufs.create();
 		buf.writeVarInt(sets.size()); //amount of card sets
 		for (Identifier id : sets.keySet()) {
-			buf.writeIdentifier(id); //ID of the card set
+			buf.writeIdentifier(id); //id of the card set
 			CardSet set = sets.get(id);
 			buf.writeIdentifier(set.getEmblem()); //emblem of the card set
 			Map<String, Card> cards = set.getCards();

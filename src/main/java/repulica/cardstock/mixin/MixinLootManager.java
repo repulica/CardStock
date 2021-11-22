@@ -25,7 +25,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import repulica.cardstock.CardStock;
-import repulica.cardstock.data.CardPack;
+import repulica.cardstock.api.CardPack;
 import repulica.cardstock.data.CardPackLootFunction;
 
 import java.io.IOException;

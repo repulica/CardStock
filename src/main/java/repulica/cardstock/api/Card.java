@@ -1,4 +1,4 @@
-package repulica.cardstock.data;
+package repulica.cardstock.api;
 
 import net.minecraft.text.Text;
 import net.minecraft.util.Rarity;

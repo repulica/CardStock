@@ -1,4 +1,4 @@
-package repulica.cardstock.data;
+package repulica.cardstock.api;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;

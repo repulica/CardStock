@@ -20,7 +20,7 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import repulica.cardstock.CardStock;
-import repulica.cardstock.data.CardManager;
+import repulica.cardstock.api.CardManager;
 
 import java.util.List;
 

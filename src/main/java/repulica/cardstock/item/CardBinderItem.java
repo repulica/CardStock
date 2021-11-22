@@ -2,6 +2,7 @@ package repulica.cardstock.item;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.item.DyeableItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.GenericContainerScreenHandler;
@@ -16,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
 import repulica.cardstock.CardStock;
 import repulica.cardstock.component.CardStockComponents;
 
-public class CardBinderItem extends Item {
+public class CardBinderItem extends Item implements DyeableItem {
 	public CardBinderItem(Settings settings) {
 		super(settings);
 	}

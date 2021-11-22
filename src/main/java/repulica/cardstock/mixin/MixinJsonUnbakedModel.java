@@ -26,10 +26,10 @@ public abstract class MixinJsonUnbakedModel {
 
 	@Shadow public abstract SpriteIdentifier resolveSprite(String spriteName);
 
-	@Inject(method="getTextureDependencies", at=@At(value="INVOKE", target="Lnet/minecraft/client/render/model/json/JsonUnbakedModel;getRootModel()Lnet/minecraft/client/render/model/json/JsonUnbakedModel;"), locals= LocalCapture.CAPTURE_FAILEXCEPTION)
-	private void getCardModelDeps(Function<Identifier, UnbakedModel> unbakedModelGetter, Set<Pair<String, String>> unresolvedTextureReferences, CallbackInfoReturnable<Collection<SpriteIdentifier>> info, Set<SpriteIdentifier> dependencies) {
+	@Inject(method="getTextureDependencies", at=@At(value="RETURN"))
+	private void getCardModelDeps(Function<Identifier, UnbakedModel> unbakedModelGetter, Set<Pair<String, String>> unresolvedTextureReferences, CallbackInfoReturnable<Collection<SpriteIdentifier>> info) {
 		if (this.getRootModel() == CardStockClient.CARD_MARKER) {
-			CardModelGenerator.LAYERS.forEach((string) -> dependencies.add(this.resolveSprite(string)));
+			CardModelGenerator.LAYERS.forEach((string) -> info.getReturnValue().add(this.resolveSprite(string)));
 		}
 	}
 }

@@ -4,9 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
-import it.unimi.dsi.fastutil.objects.Object2FloatMap;
 import net.minecraft.item.ItemStack;
-import net.minecraft.loot.LootTableReporter;
 import net.minecraft.loot.condition.LootCondition;
 import net.minecraft.loot.context.LootContext;
 import net.minecraft.loot.function.ConditionalLootFunction;
@@ -15,8 +13,9 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
 import net.minecraft.util.Pair;
 import org.jetbrains.annotations.Nullable;
+import repulica.cardstock.api.CardManager;
+import repulica.cardstock.api.CardSet;
 
-import java.util.Collection;
 import java.util.List;
 
 public class CardPackLootFunction extends ConditionalLootFunction {

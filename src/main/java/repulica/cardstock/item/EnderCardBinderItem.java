@@ -35,7 +35,7 @@ public class EnderCardBinderItem extends Item {
 
 		@Override
 		public Text getDisplayName() {
-			return new TranslatableText("item.cardstock.personal_card_binder");
+			return new TranslatableText("item.cardstock.ender_card_binder");
 		}
 
 		@Nullable

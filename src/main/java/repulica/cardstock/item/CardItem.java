@@ -12,8 +12,8 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Rarity;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
-import repulica.cardstock.data.Card;
-import repulica.cardstock.data.CardManager;
+import repulica.cardstock.api.Card;
+import repulica.cardstock.api.CardManager;
 
 import java.util.List;
 

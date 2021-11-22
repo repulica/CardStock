@@ -2,12 +2,11 @@ package repulica.cardstock.component;
 
 import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.nbt.NbtCompound;
 
 public class PlayerCardBinderComponent implements CardBinderComponent {
 	private CardBinderInventory inv = new CardBinderInventory();
-	private PlayerEntity player;
+	private final PlayerEntity player;
 
 	public PlayerCardBinderComponent(PlayerEntity player) {
 		this.player = player;

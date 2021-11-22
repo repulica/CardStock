@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.minecraft.client.render.model.json.JsonUnbakedModel;
 import net.minecraft.client.util.ModelIdentifier;
+import net.minecraft.item.DyeableItem;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import repulica.cardstock.CardStock;
@@ -41,5 +42,6 @@ public class CardStockClient implements ClientModInitializer {
 			}
 		});
 		ColorProviderRegistry.ITEM.register(new CardColorProvider(), CardStock.CARD);
+		ColorProviderRegistry.ITEM.register((stack, tintIndex) -> tintIndex == 0? ((DyeableItem) stack.getItem()).getColor(stack) : 0xFFFFFF, CardStock.CARD_BINDER);
 	}
 }

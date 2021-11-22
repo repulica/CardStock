@@ -10,12 +10,14 @@ import net.minecraft.loot.LootTable;
 import net.minecraft.loot.context.LootContext;
 import net.minecraft.loot.context.LootContextTypes;
 import net.minecraft.nbt.NbtList;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
+import repulica.cardstock.CardStock;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +31,7 @@ public class CardPackItem extends Item {
 	@Override
 	public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
 		if (!world.isClient) {
+			ServerPlayerEntity player = (ServerPlayerEntity) user;
 			ItemStack stack = user.getStackInHand(hand);
 			if (stack.getOrCreateTag().contains("Items")) {
 				NbtList list = stack.getOrCreateTag().getList("Items", NbtType.COMPOUND);
@@ -36,7 +39,7 @@ public class CardPackItem extends Item {
 					DefaultedList<ItemStack> stacks = DefaultedList.ofSize(list.size(), ItemStack.EMPTY);
 					Inventories.readNbt(stack.getOrCreateTag(), stacks);
 					List<ItemStack> cards = stacks.stream().filter(e -> !e.isEmpty()).collect(Collectors.toCollection(ArrayList::new));
-					giveCards(user, stack, cards);
+					giveCards(player, stack, cards);
 				} else {
 					stack.decrement(1);
 				}
@@ -44,7 +47,7 @@ public class CardPackItem extends Item {
 				LootTable table = world.getServer().getLootManager().getTable(new Identifier(stack.getOrCreateTag().getString("Pack")));
 				LootContext ctx = new LootContext.Builder((ServerWorld) world).build(LootContextTypes.EMPTY);
 				List<ItemStack> cards = table.generateLoot(ctx);
-				giveCards(user, stack, cards);
+				giveCards(player, stack, cards);
 				stack.getOrCreateTag().remove("Pack");
 			} else {
 				stack.setCount(0);
@@ -58,14 +61,16 @@ public class CardPackItem extends Item {
 		return super.use(world, user, hand);
 	}
 
-	private void giveCards(PlayerEntity player, ItemStack stack, List<ItemStack> cards) {
+	private void giveCards(ServerPlayerEntity player, ItemStack stack, List<ItemStack> cards) {
 		if (player.isSneaking()) {
 			for (ItemStack card : cards) {
-				if (!player.giveItemStack(card)) player.dropItem(card, false);
+				CardStock.CARD_PULL.trigger(player, stack);
+				player.inventory.offerOrDrop(player.world, card);
 			}
 		} else {
 			ItemStack card = cards.remove(0);
-			if (!player.giveItemStack(card)) player.dropItem(card, false);
+			CardStock.CARD_PULL.trigger(player, stack);
+			player.inventory.offerOrDrop(player.world, card);
 		}
 		if (!cards.isEmpty()) {
 			DefaultedList<ItemStack> remainder = DefaultedList.copyOf(ItemStack.EMPTY, cards.toArray(new ItemStack[]{}));

@@ -35,8 +35,6 @@ public class MixinModelLoader {
 								 Triple<Identifier, AffineTransformation, Boolean> triple, UnbakedModel unbakedModel,
 								 JsonUnbakedModel jsonUnbakedModel) {
 		if (jsonUnbakedModel.getRootModel() == CardStockClient.CARD_MARKER) {
-			System.out.println("Hooking replacement card model for ID " + id + "!");
-			System.out.println(this.spriteAtlasManager);
 			info.setReturnValue(CardStockClient.CARD_MODEL_GENERATOR.create(this.spriteAtlasManager::getSprite, jsonUnbakedModel).bake((ModelLoader) (Object) this, jsonUnbakedModel, spriteAtlasManager::getSprite, settings, id, false));
 		}
 	}
