@@ -1,8 +1,0 @@
-set "cardstock:sample_set"
-cards 10
-weights r5=1 /-r4=5 /-r3=10 /-r2=20 /-r1=50
-bonuses {
-    rarity 5 count=1 {
-        card "sample_common" chance=0.25
-    }
-}

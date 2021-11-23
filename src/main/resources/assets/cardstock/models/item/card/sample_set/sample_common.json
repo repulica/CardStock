@@ -1,6 +1,0 @@
-{
-  "parent": "cardstock:item/foil_card",
-  "textures": {
-    "layer0": "cardstock:item/card_missingno"
-  }
-}

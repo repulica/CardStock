@@ -1,0 +1,8 @@
+set "cardstock:retromc"
+cards 10
+weights r5=5 r4=10 r3=15 r2=20 r1=36
+bonuses {
+    rarity 5 count=1 {
+        card "biosphere" chance=0.1
+    }
+}

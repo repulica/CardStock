@@ -31,7 +31,7 @@ public class CardSet {
 	}
 
 	public Card getCard(String name) {
-		return cards.get(name);
+		return cards.getOrDefault(name, CardManager.INSTANCE.getDefaultMissingno());
 	}
 
 	public List<String> getCardNamesForRarity(int rarity) {

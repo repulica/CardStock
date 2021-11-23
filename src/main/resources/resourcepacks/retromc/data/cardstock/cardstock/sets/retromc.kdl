@@ -1,0 +1,68 @@
+emblem "retromc:textures/gui/retromc.png"
+card "biosphere" {
+	rarity 5
+	info text="Risugami, Minecraft beta 1.6.2" color="green"
+	lore {
+		- translate="text.retromc.biosphere.1" color="gray"
+		- translate="text.retromc.biosphere.2" color="gray"
+		- translate="text.retromc.biosphere.3" color="gray"
+	}
+	artist "BluKat"
+	date "2021"
+}
+card "redpower" {
+	rarity 5
+	info text="Eloraam, Minecraft 1.4.7" color="green"
+	lore {
+		- translate="text.retromc.redpower.1" color="gray"
+		- translate="text.retromc.redpower.2" color="gray"
+		- translate="text.retromc.redpower.3" color="gray"
+	}
+}
+card "beekeeping" {
+	rarity 4
+	info text="Nandonalt, Minecraft beta 1.7.3" color="green"
+	lore {
+		- translate="text.retromc.beekeeping.1" color="gray"
+		- translate="text.retromc.beekeeping.2" color="gray"
+		- translate="text.retromc.beekeeping.3" color="gray"
+	}
+	artist "BluKat"
+	date "2021"
+}
+card "factorization" {
+	rarity 4
+	info text="Neptunepink, Minecraft 1.7.10" color="green"
+	lore {
+		- translate="text.retromc.factorization.1" color="gray"
+		- translate="text.retromc.factorization.2" color="gray"
+		- translate="text.retromc.factorization.3" color="gray"
+	}
+	artist "BluKat"
+	date "2021"
+}
+card "witchery" {
+	rarity 3
+	info text="Emoniph, Minecraft 1.7.10" color="green"
+	lore {
+		- translate="text.retromc.witchery.1" color="gray"
+		- translate="text.retromc.witchery.2" color="gray"
+		- translate="text.retromc.witchery.3" color="gray"
+	}
+	artist "BluKat"
+	date "2021"
+}
+card "yttr" {
+	rarity 3
+	info text="Unascribed, Minecraft..." color="green" {
+		- text="1.16.5" color="red"
+		- text="?" color="green"
+	}
+	lore {
+		- translate="text.retromc.yttr.1" color="gray"
+		- translate="text.retromc.yttr.2" color="gray"
+		- translate="text.retromc.yttr.3" color="gray"
+	}
+	artist "BlueKat"
+	date "2021"
+}

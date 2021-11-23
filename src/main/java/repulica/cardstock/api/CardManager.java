@@ -38,7 +38,7 @@ public class CardManager implements SimpleSynchronousResourceReloadListener {
 	private final CardSet defaultMissingnoSet;
 
 	public CardManager() {
-		this.defaultMissingno = new Card(1, new TranslatableText("text.cardstock.missingno"), new ArrayList<>(), "kat", "2020");
+		this.defaultMissingno = new Card(1, new TranslatableText("text.cardstock.missingno"), new ArrayList<>(), "BluKat", "2021");
 		Map<String, Card> setMap = new HashMap<>();
 		setMap.put("missingno", defaultMissingno);
 		this.defaultMissingnoSet = new CardSet(new Identifier(CardStock.MODID, "textures/gui/missingno.png"), setMap);

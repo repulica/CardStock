@@ -1,5 +1,6 @@
 {
-  "item.cardstock.card": "Missing Card",
+  "card.cardstock.missingno.missingno": "Mysterious Card",
+  "item.cardstock.card": "Mysterious Card",
   "item.cardstock.card_binder": "Card Binder",
   "item.cardstock.ender_card_binder": "Ender Card Binder",
   "item.cardstock.card_pack": "Card Pack",

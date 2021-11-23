@@ -1,0 +1,6 @@
+set "cardstock:retromc"
+cards 10
+weights r5=1 r4=5 r3=10 r2=20 r1=50
+bonuses {
+    rarity 4 count=1
+}
