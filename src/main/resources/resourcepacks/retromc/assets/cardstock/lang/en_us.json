@@ -4,5 +4,26 @@
   "card.cardstock.retromc.beekeeping": "Beekeeping",
   "card.cardstock.retromc.factorization": "Factorization",
   "card.cardstock.retromc.witchery": "Witchery",
-  "card.cardstock.retromc.yttr": "Yttr"
+  "card.cardstock.retromc.yttr": "Yttr",
+
+  "text.retromc.biosphere.1": "Risugami's most well-known mod,",
+  "text.retromc.biosphere.2": "and one of the first world generators",
+  "text.retromc.biosphere.3": "providing a total system overhaul.",
+  "text.retromc.redpower.1": "The all-time most impactful redstone mod,",
+  "text.retromc.redpower.2": "its successor is a full game",
+  "text.retromc.redpower.3": "that is still under development today!",
+
+  "text.retromc.beekeeping.1": "The first Minecraft mod to add bees,",
+  "text.retromc.beekeeping.2": "a feature so popular that they're now",
+  "text.retromc.beekeeping.3": "part of vanilla Minecraft itself.",
+  "text.retromc.factorization.1": "The progenitor of item barrels,",
+  "text.retromc.factorization.2": "Factorization is appreciated by many",
+  "text.retromc.factorization.3": "as one of MC's most underrated mods.",
+
+  "text.retromc.witchery.1": "A masterpiece of aesthetic,",
+  "text.retromc.witchery.2": "Witchery brought a comfy feeling",
+  "text.retromc.witchery.3": "with its powerful magic.",
+  "text.retromc.yttr.1": "Wait, that can't be right.",
+  "text.retromc.yttr.2": "Didn't that come out this year?",
+  "text.retromc.yttr.3": "It could be in the pack right now!"
 }
