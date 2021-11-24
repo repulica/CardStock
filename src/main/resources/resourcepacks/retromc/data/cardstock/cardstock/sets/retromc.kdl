@@ -1,4 +1,24 @@
+/*
+future cards:
+logistics pipes 4* or 5*
+big reactors 4* or 5*
+*/
+
 emblem "retromc:textures/gui/retromc.png"
+
+//5* cards
+//shaped the ecosystem of minecraft modding as we know it
+card "appliedenergistics" {
+	rarity 5
+	info text="AlgorithmX2, Minecraft 1.6.4" color="green"
+	lore {
+		- translate="text.retromc.appliedenergistics.1" color="gray"
+		- translate="text.retromc.appliedenergistics.2" color="gray"
+		- translate="text.retromc.appliedenergistics.3" color="gray"
+	}
+	artist "BluKat"
+    date "2021"
+}
 card "biosphere" {
 	rarity 5
 	info text="Risugami, Minecraft beta 1.6.2" color="green"
@@ -10,6 +30,17 @@ card "biosphere" {
 	artist "BluKat"
 	date "2021"
 }
+card "industrialcraft" {
+	rarity 5
+	info text="Alblaka, Minecraft beta 1.7.3" color="green"
+	lore {
+		- translate="text.retromc.industrialcraft.1" color="gray"
+		- translate="text.retromc.industrialcraft.2" color="gray"
+		- translate="text.retromc.industrialcraft.3" color="gray"
+	}
+	artist "BluKat"
+    date "2021"
+}
 card "redpower" {
 	rarity 5
 	info text="Eloraam, Minecraft 1.4.7" color="green"
@@ -18,7 +49,12 @@ card "redpower" {
 		- translate="text.retromc.redpower.2" color="gray"
 		- translate="text.retromc.redpower.3" color="gray"
 	}
+	artist "BluKat"
+    date "2021"
 }
+
+//4* cards
+//had a quiet but long-lasting impact on modding
 card "beekeeping" {
 	rarity 4
 	info text="Nandonalt, Minecraft beta 1.7.3" color="green"
@@ -40,6 +76,53 @@ card "factorization" {
 	}
 	artist "BluKat"
 	date "2021"
+}
+card "magicalcrops" {
+	rarity 4
+	info text="Mark719, Minecraft 1.7.10" color="green"
+	lore {
+		- translate="text.retromc.magicalcrops.1" color="gray"
+		- translate="text.retromc.magicalcrops.2" color="gray"
+		- translate="text.retromc.magicalcrops.3" color="gray"
+	}
+	artist "BluKat"
+	date "2021"
+}
+card "mffs" {
+	rarity 4
+	info text="Immibis, Minecraft 1.2.5" color="green"
+	lore {
+		- translate="text.retromc.mffs.1" color="gray"
+		- translate="text.retromc.mffs.2" color="gray"
+		- translate="text.retromc.mffs.3" color="gray"
+	}
+	artist "BluKat"
+	date "2021"
+}
+
+//3* cards
+//made a big splash but didnt inspire many non-direct-successor projects
+card "terrafirmacraft" {
+	rarity 3
+	info text="Bioxx, Kittychanley, and Dunk, Minecraft 1.7.10" color="green"
+	lore {
+		- translate="text.retromc.terrafirmacraft.1" color="gray"
+		- translate="text.retromc.terrafirmacraft.2" color="gray"
+		- translate="text.retromc.terrafirmacraft.3" color="gray"
+	}
+	artist "BluKat"
+	date "2021"
+}
+card "thaumcraft3" {
+	rarity 3
+	info text="Azanor, Minecraft 1.5.2" color="green"
+	lore {
+		- translate="text.retromc.thaumcraft3.1" color="gray"
+		- translate="text.retromc.thaumcraft3.2" color="gray"
+		- translate="text.retromc.thaumcraft3.3" color="gray"
+	}
+	artist "BluKat"
+    date "2021"
 }
 card "witchery" {
 	rarity 3
@@ -64,5 +147,99 @@ card "yttr" {
 		- translate="text.retromc.yttr.3" color="gray"
 	}
 	artist "BlueKat"
+	date "2021"
+}
+
+//2* cards
+//popular mods with little long-term impact
+card "dartcraft" {
+	rarity 2
+	info text="Bluedart, Minecaft 1.6.4" color="green"
+	lore {
+		- translate="text.retromc.dartcraft.1" color="gray"
+		- translate="text.retromc.dartcraft.2" color="gray"
+		- translate="text.retromc.dartcraft.3" color="gray"
+	}
+	artist "BluKat"
+	date "2020"
+}
+card "qcraft" {
+	rarity 2
+	info text="Dan200, Minecraft 1.5.2" color="green"
+	lore {
+		- translate="text.retromc.qcraft.1" color="gray"
+		- translate="text.retromc.qcraft.2" color="gray"
+		- translate="text.retromc.qcraft.3" color="gray"
+	}
+	artist "BluKat"
+	date "2021"
+}
+card "universalelectricity" {
+	rarity 2
+	info text="BuiltBrokenModding, Minecraft 1.7.10" color="green"
+	lore {
+		- translate="text.retromc.universalelectricity.1" color="gray"
+		- translate="text.retromc.universalelectricity.2" color="gray"
+		- translate="text.retromc.universalelectricity.3" color="gray"
+	}
+	artist "BluKat"
+	date "2021"
+}
+card "witchinggadgets" {
+	rarity 2
+	info text="BluSunrize, Minecraft 1.7.10" color="green"
+	lore {
+		- translate="text.retromc.witchinggadgets.1" color="gray"
+		- translate="text.retromc.witchinggadgets.2" color="gray"
+		- translate="text.retromc.witchinggadgets.3" color="gray"
+	}
+	artist "BluKat"
+	date "2021"
+}
+
+//1* cards
+//hidden gems that deserve more attention then and now
+card "artifice" {
+	rarity 1
+	info text="Shukaro, Minecraft 1.7.10" color="green"
+	lore {
+		- translate="text.retromc.artifice.1" color="gray"
+		- translate="text.retromc.artifice.2" color="gray"
+		- translate="text.retromc.artifice.3" color="gray"
+	}
+	artist "BluKat"
+	date "2021"
+}
+card "mariculture" {
+	rarity 1
+	info text="Joshiejack, Minecraft 1.7.10" color="green"
+	lore {
+		- translate="text.retromc.mariculture.1" color="gray"
+		- translate="text.retromc.mariculture.2" color="gray"
+		- translate="text.retromc.mariculture.3" color="gray"
+	}
+	artist "BluKat"
+	date "2021"
+}
+card "metallurgy" {
+	rarity 1
+	info text="Shadowclaimer, Minecraft 1.7.10" color="green"
+	lore {
+		- translate="text.retromc.metallurgy.1" color="gray"
+		- translate="text.retromc.metallurgy.2" color="gray"
+		- translate="text.retromc.metallurgy.3" color="gray"
+	}
+	artist "BluKat"
+	date "2021"
+}
+card "steampower" {
+	rarity 1
+	info text="Flaxbeard, Minecraft 1.7.10" color="green"
+	lore {
+		- translate="text.retromc.steampower.1" color="gray"
+		- translate="text.retromc.steampower.2" color="gray"
+		- translate="text.retromc.steampower.3" color="gray"
+	}
+	artist "BluKat"
 	date "2021"
 }

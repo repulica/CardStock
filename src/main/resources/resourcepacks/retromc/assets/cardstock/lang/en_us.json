@@ -1,10 +1,28 @@
 {
+  "card.cardstock.retromc.appliedenergistics": "Applied Energistics 1",
   "card.cardstock.retromc.biosphere": "Biosphere",
+  "card.cardstock.retromc.industrialcraft": "IndustrialCraft 1",
   "card.cardstock.retromc.redpower": "RedPower 2",
+
   "card.cardstock.retromc.beekeeping": "Beekeeping",
   "card.cardstock.retromc.factorization": "Factorization",
+  "card.cardstock.retromc.magicalcrops": "Magical Crops",
+  "card.cardstock.retromc.mffs": "Modular Force Field Systems",
+
+  "card.cardstock.retromc.terrafirmacraft": "TerraFirmaCraft",
+  "card.cardstock.retromc.thaumcraft3": "Thaumcraft 3",
   "card.cardstock.retromc.witchery": "Witchery",
   "card.cardstock.retromc.yttr": "Yttr",
+
+  "card.cardstock.retromc.dartcraft": "DartCraft",
+  "card.cardstock.retromc.qcraft": "QCraft",
+  "card.cardstock.retromc.universalelectricity": "Universal Electricity",
+  "card.cardstock.retromc.witchinggadgets": "Witching Gadgets",
+
+  "card.cardstockretromc.artifice": "Artifice",
+  "card.cardstock.retromc.mariculture": "Mariculture",
+  "card.cardstock.retromc.metallurgy": "Metallurgy",
+  "card.cardstock.retromc.steampower": "FlaxBeard's Steam Power",
 
   "text.retromc.biosphere.1": "Risugami's most well-known mod,",
   "text.retromc.biosphere.2": "and one of the first world generators",
