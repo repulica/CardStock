@@ -2,6 +2,8 @@
 future cards:
 logistics pipes 4* or 5*
 big reactors 4* or 5*
+sync 1* or 2*
+xycraft 1* or 5*
 */
 
 emblem "retromc:textures/gui/retromc.png"
@@ -174,6 +176,17 @@ card "qcraft" {
 	artist "BluKat"
 	date "2021"
 }
+card "travellersgear" {
+	rarity 2
+	info text="BluSunrize, Minecraft 1.7.10" color="green"
+	lore {
+		- translate="text.retromc.travellersgear.1" color="gray"
+		- translate="text.retromc.travellersgear.2" color="gray"
+		- translate="text.retromc.travellersgear.3" color="gray"
+	}
+	artist "BluKat"
+	date "2021"
+}
 card "universalelectricity" {
 	rarity 2
 	info text="BuiltBrokenModding, Minecraft 1.7.10" color="green"
@@ -181,17 +194,6 @@ card "universalelectricity" {
 		- translate="text.retromc.universalelectricity.1" color="gray"
 		- translate="text.retromc.universalelectricity.2" color="gray"
 		- translate="text.retromc.universalelectricity.3" color="gray"
-	}
-	artist "BluKat"
-	date "2021"
-}
-card "witchinggadgets" {
-	rarity 2
-	info text="BluSunrize, Minecraft 1.7.10" color="green"
-	lore {
-		- translate="text.retromc.witchinggadgets.1" color="gray"
-		- translate="text.retromc.witchinggadgets.2" color="gray"
-		- translate="text.retromc.witchinggadgets.3" color="gray"
 	}
 	artist "BluKat"
 	date "2021"
