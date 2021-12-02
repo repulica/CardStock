@@ -8,7 +8,7 @@ import net.minecraft.item.ItemStack;
 public class ItemCardBinderComponent extends ItemComponent implements CardBinderComponent {
 
 	public ItemCardBinderComponent(ItemStack stack) {
-		super(stack);
+		super(stack, CardStockComponents.CARD_BINDER);
 	}
 
 	@Override
