@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "cardstock:item/ender_binder",
+    "layer1": "cardstock:item/binder_binding"
+  }
+}

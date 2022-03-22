@@ -1,8 +1,8 @@
 {
   "parent": "cardstock:builtin/card",
   "textures": {
-    "layer1": "cardstock:item/card_foil_1",
-    "layer2": "cardstock:item/card_foil_2",
-    "layer3": "cardstock:item/card_foil_3"
+    "layer1": "cardstock:item/card_rhf_1",
+    "layer2": "cardstock:item/card_rhf_2",
+    "layer3": "cardstock:item/card_rhf_3"
   }
 }
