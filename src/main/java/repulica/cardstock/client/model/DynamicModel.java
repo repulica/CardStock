@@ -19,7 +19,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockRenderView;
 import org.jetbrains.annotations.Nullable;
-import org.lwjgl.system.CallbackI;
 import repulica.cardstock.CardStock;
 
 import java.util.*;
@@ -42,7 +41,7 @@ public class DynamicModel implements BakedModel, FabricBakedModel, UnbakedModel 
 			if (stack.hasTag() && stack.getTag().contains("Card", NbtType.STRING)) {
 				Identifier cardId = new Identifier(stack.getTag().getString("Card"));
 				ModelIdentifier modelId = new ModelIdentifier(new Identifier(cardId.getNamespace(), "card/" + cardId.getPath()), "inventory");
-				((FabricBakedModel) MANAGER.getModel(modelId)).emitItemQuads(stack, randomSupplier, context);
+				getDynModel(modelId, MISSINGNO_CARD).emitItemQuads(stack, randomSupplier, context);
 			} else {
 				((FabricBakedModel) MANAGER.getModel(MISSINGNO_CARD)).emitItemQuads(stack, randomSupplier, context);
 			}
@@ -50,12 +49,21 @@ public class DynamicModel implements BakedModel, FabricBakedModel, UnbakedModel 
 			if (stack.hasTag() && stack.getTag().contains("Pack", NbtType.STRING)) {
 				Identifier packId = new Identifier(stack.getTag().getString("Pack"));
 				ModelIdentifier modelId = new ModelIdentifier(new Identifier(packId.getNamespace(), "pack/" + packId.getPath().substring("packs/".length())), "inventory");
-				((FabricBakedModel) MANAGER.getModel(modelId)).emitItemQuads(stack, randomSupplier, context);
+				getDynModel(modelId, MISSINGNO_PACK).emitItemQuads(stack, randomSupplier, context);
 			} else {
 				((FabricBakedModel) MANAGER.getModel(MISSINGNO_PACK)).emitItemQuads(stack, randomSupplier, context);
 			}
 		} else {
 			((FabricBakedModel) MANAGER.getMissingModel()).emitItemQuads(stack, randomSupplier, context);
+		}
+	}
+
+	private FabricBakedModel getDynModel(ModelIdentifier modelId, ModelIdentifier fallback) {
+		BakedModel model = MANAGER.getModel(modelId);
+		if (model == MANAGER.getMissingModel()) {
+			return (FabricBakedModel) MANAGER.getModel(fallback);
+		} else {
+			return (FabricBakedModel) model;
 		}
 	}
 

@@ -1,6 +1,6 @@
 {
   "parent": "cardstock:builtin/card",
   "textures": {
-    "layer0": "cardstock:item/card_biospheres"
+    "layer0": "cardstock:item/card_missingno"
   }
 }

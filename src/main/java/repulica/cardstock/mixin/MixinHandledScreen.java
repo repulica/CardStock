@@ -30,9 +30,9 @@ public abstract class MixinHandledScreen extends Screen {
 	@Redirect(method="render", at=@At(value="INVOKE", target="Lnet/minecraft/client/gui/screen/ingame/HandledScreen;fillGradient(Lnet/minecraft/client/util/math/MatrixStack;IIIIII)V"))
 	protected void hookSmallCardDraw(HandledScreen<?> caller, MatrixStack matrices, int startX, int startY, int endX, int endY, int colorStart, int colorEnd) {
 		if (caller instanceof CardBinderScreen && SLOT_LOCAL.get().inventory instanceof CardBinderInventory) {
-			this.fillGradient(matrices, startX+5, startY+2, endX-5, startY+3, colorStart, colorEnd);
-			this.fillGradient(matrices, startX+4, startY+3, endX-4, endY-3, colorStart, colorEnd);
-			this.fillGradient(matrices, startX+5, endY-3, endX-5, endY-2, colorStart, colorEnd);
+			this.fillGradient(matrices, startX+4, startY+1, endX-4, startY+2, colorStart, colorEnd);
+			this.fillGradient(matrices, startX+3, startY+2, endX-3, endY-2, colorStart, colorEnd);
+			this.fillGradient(matrices, startX+4, endY-2, endX-4, endY-1, colorStart, colorEnd);
 		} else {
 			this.fillGradient(matrices, startX, startY, endX, endY, colorStart, colorEnd);
 		}
