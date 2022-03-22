@@ -12,11 +12,12 @@ import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import net.fabricmc.fabric.api.loot.v1.FabricLootPoolBuilder;
 import net.minecraft.loot.*;
 import net.minecraft.loot.entry.ItemEntry;
+import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Pair;
 import net.minecraft.util.profiler.Profiler;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -47,7 +48,7 @@ public class MixinLootManager {
 		for (Identifier id : ids) {
 			try {
 				Identifier tableId = new Identifier(id.getNamespace(), id.getPath().substring(PREFIX_LENGTH, id.getPath().length() - SUFFIX_LENGTH));
-				KDLDocument doc = PARSER.parse(manager.getResource(id).getInputStream());
+				KDLDocument doc = PARSER.parse(manager.method_14486(id).getInputStream());
 				CardPack pack = parsePackDoc(tableId, doc);
 				int bonuses = 0;
 				for (CardPack.Bonus bonus : pack.getBonuses()) {
@@ -58,14 +59,14 @@ public class MixinLootManager {
 				}
 				int rawPulls = pack.getCardCount() - bonuses;
 				LootTable.Builder builder = new LootTable.Builder();
-				FabricLootPoolBuilder mainPool = FabricLootPoolBuilder.builder().rolls(ConstantLootTableRange.create(rawPulls));
+				FabricLootPoolBuilder mainPool = FabricLootPoolBuilder.builder().rolls(ConstantLootNumberProvider.create(rawPulls));
 				for (int rarity : pack.getWeights().keySet()) {
 					int weight = pack.getWeights().get(rarity);
 					mainPool.withEntry(ItemEntry.builder(CardStock.CARD).weight(weight).apply(CardPackLootFunction.builder(pack.getSet(), rarity, null)).build());
 				}
 				builder.pool(mainPool);
 				for (CardPack.Bonus bonus : pack.getBonuses()) {
-					FabricLootPoolBuilder pool = FabricLootPoolBuilder.builder().rolls(ConstantLootTableRange.create(bonus.getCount()));
+					FabricLootPoolBuilder pool = FabricLootPoolBuilder.builder().rolls(ConstantLootNumberProvider.create(bonus.getCount()));
 					pool.withEntry(
 							ItemEntry.builder(CardStock.CARD).apply(CardPackLootFunction.builder(
 									pack.getSet(),

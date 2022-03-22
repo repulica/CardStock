@@ -3,10 +3,7 @@ package repulica.cardstock.client.model;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.mojang.datafixers.util.Either;
-import net.minecraft.client.render.model.json.JsonUnbakedModel;
-import net.minecraft.client.render.model.json.ModelElement;
-import net.minecraft.client.render.model.json.ModelElementFace;
-import net.minecraft.client.render.model.json.ModelElementTexture;
+import net.minecraft.client.render.model.json.*;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.util.Identifier;
@@ -20,6 +17,8 @@ import java.util.function.Function;
 //alternate version of ItemModelGenerator that makes them half as thick
 public class CardModelGenerator {
 	public static final List<String> LAYERS = Lists.newArrayList("layer0", "layer1", "layer2", "layer3", "layer4");
+	private static final float FRONT = 7.75F;
+	private static final float BACK = 8.25F;
 
 	public JsonUnbakedModel create(Function<SpriteIdentifier, Sprite> textureGetter, JsonUnbakedModel blockModel) {
 		Map<String, Either<SpriteIdentifier, String>> map = Maps.newHashMap();
@@ -48,7 +47,7 @@ public class CardModelGenerator {
 		map.put(Direction.SOUTH, new ModelElementFace(null, layer, key, new ModelElementTexture(new float[]{0.0F, 0.0F, 16.0F, 16.0F}, 0)));
 		map.put(Direction.NORTH, new ModelElementFace(null, layer, key, new ModelElementTexture(new float[]{16.0F, 0.0F, 0.0F, 16.0F}, 0)));
 		List<ModelElement> list = Lists.newArrayList();
-		list.add(new ModelElement(new Vec3f(0.0F, 0.0F, 7.75F), new Vec3f(16.0F, 16.0F, 8.25F), map, null, true));
+		list.add(new ModelElement(new Vec3f(0.0F, 0.0F, FRONT), new Vec3f(16.0F, 16.0F, FRONT), map, null, true));
 		list.addAll(this.addSubComponents(sprite, key, layer));
 		return list;
 	}
@@ -125,16 +124,16 @@ public class CardModelGenerator {
 			map.put(side.getDirection(), new ModelElementFace(null, layer, key, new ModelElementTexture(new float[]{u1, v1, u2, v2}, 0)));
 			switch(side) {
 				case UP:
-					list.add(new ModelElement(new Vec3f(x1, y1, 7.75F), new Vec3f(x2, y1, 8.25F), map, null, true));
+					list.add(new ModelElement(new Vec3f(x1, y1, FRONT), new Vec3f(x2, y1, FRONT), map, null, true));
 					break;
 				case DOWN:
-					list.add(new ModelElement(new Vec3f(x1, y2, 7.75F), new Vec3f(x2, y2, 8.25F), map, null, true));
+					list.add(new ModelElement(new Vec3f(x1, y2, FRONT), new Vec3f(x2, y2, FRONT), map, null, true));
 					break;
 				case LEFT:
-					list.add(new ModelElement(new Vec3f(x1, y1, 7.75F), new Vec3f(x1, y2, 8.25F), map, null, true));
+					list.add(new ModelElement(new Vec3f(x1, y1, FRONT), new Vec3f(x1, y2, FRONT), map, null, true));
 					break;
 				case RIGHT:
-					list.add(new ModelElement(new Vec3f(x2, y1, 7.75F), new Vec3f(x2, y2, 8.25F), map, null, true));
+					list.add(new ModelElement(new Vec3f(x2, y1, FRONT), new Vec3f(x2, y2, FRONT), map, null, true));
 			}
 		}
 
@@ -144,21 +143,20 @@ public class CardModelGenerator {
 	private List<Frame> getFrames(Sprite sprite) {
 		int width = sprite.getWidth();
 		int height = sprite.getHeight();
-		List<Frame> frames = Lists.newArrayList();
-
-		for(int frame = 0; frame < sprite.getFrameCount(); ++frame) {
+		List<Frame> list = Lists.newArrayList();
+		sprite.getDistinctFrameCount().forEach((frame) -> {
 			for(int y = 0; y < height; ++y) {
 				for(int x = 0; x < width; ++x) {
-					boolean isOpaque = !this.isPixelTransparent(sprite, frame, x, y, width, height);
-					this.buildCube(Side.UP, frames, sprite, frame, x, y, width, height, isOpaque);
-					this.buildCube(Side.DOWN, frames, sprite, frame, x, y, width, height, isOpaque);
-					this.buildCube(Side.LEFT, frames, sprite, frame, x, y, width, height, isOpaque);
-					this.buildCube(Side.RIGHT, frames, sprite, frame, x, y, width, height, isOpaque);
+					boolean bl = !this.isPixelTransparent(sprite, frame, x, y, width, height);
+					this.buildCube(Side.UP, list, sprite, frame, x, y, width, height, bl);
+					this.buildCube(Side.DOWN, list, sprite, frame, x, y, width, height, bl);
+					this.buildCube(Side.LEFT, list, sprite, frame, x, y, width, height, bl);
+					this.buildCube(Side.RIGHT, list, sprite, frame, x, y, width, height, bl);
 				}
 			}
-		}
 
-		return frames;
+		});
+		return list;
 	}
 
 	private void buildCube(Side side, List<Frame> cubes, Sprite sprite, int frame, int x, int y, int i, int j, boolean isOpaque) {

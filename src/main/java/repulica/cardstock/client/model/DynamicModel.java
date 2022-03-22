@@ -38,16 +38,16 @@ public class DynamicModel implements BakedModel, FabricBakedModel, UnbakedModel 
 	@Override
 	public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
 		if (stack.getItem() == CardStock.CARD) {
-			if (stack.hasTag() && stack.getTag().contains("Card", NbtType.STRING)) {
-				Identifier cardId = new Identifier(stack.getTag().getString("Card"));
+			if (stack.hasNbt() && stack.getNbt().contains("Card", NbtType.STRING)) {
+				Identifier cardId = new Identifier(stack.getNbt().getString("Card"));
 				ModelIdentifier modelId = new ModelIdentifier(new Identifier(cardId.getNamespace(), "card/" + cardId.getPath()), "inventory");
 				getDynModel(modelId, MISSINGNO_CARD).emitItemQuads(stack, randomSupplier, context);
 			} else {
 				((FabricBakedModel) MANAGER.getModel(MISSINGNO_CARD)).emitItemQuads(stack, randomSupplier, context);
 			}
 		} else if (stack.getItem() == CardStock.CARD_PACK) {
-			if (stack.hasTag() && stack.getTag().contains("Pack", NbtType.STRING)) {
-				Identifier packId = new Identifier(stack.getTag().getString("Pack"));
+			if (stack.hasNbt() && stack.getNbt().contains("Pack", NbtType.STRING)) {
+				Identifier packId = new Identifier(stack.getNbt().getString("Pack"));
 				ModelIdentifier modelId = new ModelIdentifier(new Identifier(packId.getNamespace(), "pack/" + packId.getPath().substring("packs/".length())), "inventory");
 				getDynModel(modelId, MISSINGNO_PACK).emitItemQuads(stack, randomSupplier, context);
 			} else {
@@ -68,6 +68,11 @@ public class DynamicModel implements BakedModel, FabricBakedModel, UnbakedModel 
 	}
 
 	@Override
+	public Sprite getParticleSprite() {
+		return null;
+	}
+
+	@Override
 	public boolean isVanillaAdapter() {
 		return false;
 	}
@@ -77,7 +82,7 @@ public class DynamicModel implements BakedModel, FabricBakedModel, UnbakedModel 
 
 	@Override
 	public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction face, Random random) {
-		return null;
+		return MANAGER.getModel(MISSINGNO_CARD).getQuads(state, face, random);
 	}
 
 	@Override
@@ -99,12 +104,7 @@ public class DynamicModel implements BakedModel, FabricBakedModel, UnbakedModel 
 	public boolean isBuiltin() {
 		return false;
 	}
-
-	@Override
-	public Sprite getSprite() {
-		return null;
-	}
-
+	
 	@Override
 	public ModelTransformation getTransformation() {
 		return transformation;

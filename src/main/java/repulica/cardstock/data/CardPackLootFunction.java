@@ -20,9 +20,9 @@ import java.util.List;
 
 public class CardPackLootFunction extends ConditionalLootFunction {
 	public static final LootFunctionType TYPE = new LootFunctionType(new Serializer());
-	private Identifier targetSet;
-	private int rarity;
-	private @Nullable Pair<String, Float> banner;
+	private final Identifier targetSet;
+	private final int rarity;
+	private final @Nullable Pair<String, Float> banner;
 
 	public CardPackLootFunction(LootCondition[] conditions, Identifier targetSet, int rarity, @Nullable Pair<String, Float> banner) {
 		super(conditions);
@@ -35,7 +35,7 @@ public class CardPackLootFunction extends ConditionalLootFunction {
 	protected ItemStack process(ItemStack stack, LootContext context) {
 		if (banner != null && !banner.getLeft().equals("")) {
 			if (context.getRandom().nextFloat() < banner.getRight()) {
-				stack.getOrCreateTag().putString("Card", targetSet.toString() + "/" + banner.getLeft());
+				stack.getOrCreateNbt().putString("Card", targetSet.toString() + "/" + banner.getLeft());
 				return stack;
 			}
 		}
@@ -47,7 +47,7 @@ public class CardPackLootFunction extends ConditionalLootFunction {
 			names = set.getCardNamesForRarity(this.rarity);
 		}
 		String name = names.get(context.getRandom().nextInt(names.size()));
-		stack.getOrCreateTag().putString("Card", targetSet.toString() + "/" + name);
+		stack.getOrCreateNbt().putString("Card", targetSet.toString() + "/" + name);
 		return stack;
 	}
 

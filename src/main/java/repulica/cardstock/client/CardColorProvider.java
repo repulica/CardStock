@@ -3,7 +3,6 @@ package repulica.cardstock.client;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.color.item.ItemColorProvider;
 import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.decoration.ItemFrameEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 
@@ -21,7 +20,7 @@ public class CardColorProvider implements ItemColorProvider {
 		if (holderYawValid) {
 			yaw = holderYaw;
 			if (MinecraftClient.getInstance().player != null) {
-				float playerYaw = MinecraftClient.getInstance().player.yaw;
+				float playerYaw = MinecraftClient.getInstance().player.getYaw();
 				if (yaw >= playerYaw) {
 					yaw -= playerYaw;
 				} else {
@@ -29,9 +28,9 @@ public class CardColorProvider implements ItemColorProvider {
 				}
 			}
 		} else if (stack.getHolder() instanceof ItemEntity) {
-			yaw = (float) Math.toDegrees(((ItemEntity) stack.getHolder()).method_27314(MinecraftClient.getInstance().getTickDelta())) % 360F;
+			yaw = (float) Math.toDegrees(((ItemEntity) stack.getHolder()).getRotation(MinecraftClient.getInstance().getTickDelta())) % 360F;
 			if (MinecraftClient.getInstance().player != null) {
-				float playerYaw = MinecraftClient.getInstance().player.yaw;
+				float playerYaw = MinecraftClient.getInstance().player.getYaw();
 				if (yaw >= playerYaw) {
 					yaw -= playerYaw;
 				} else {
@@ -39,9 +38,9 @@ public class CardColorProvider implements ItemColorProvider {
 				}
 			}
 		} else if (stack.getHolder() != null) {
-			yaw = stack.getHolder().yaw;
+			yaw = stack.getHolder().getYaw();
 			if (MinecraftClient.getInstance().player != null) {
-				float playerYaw = MinecraftClient.getInstance().player.yaw;
+				float playerYaw = MinecraftClient.getInstance().player.getYaw();
 				if (yaw >= playerYaw) {
 					yaw -= playerYaw;
 				} else {
@@ -49,7 +48,7 @@ public class CardColorProvider implements ItemColorProvider {
 				}
 			}
 		} else if (MinecraftClient.getInstance().player != null) {
-			yaw = MinecraftClient.getInstance().player.yaw;
+			yaw = MinecraftClient.getInstance().player.getYaw();
 		} else {
 			yaw = 0;
 		}

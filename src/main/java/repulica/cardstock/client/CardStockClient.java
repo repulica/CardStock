@@ -3,13 +3,15 @@ package repulica.cardstock.client;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
-import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
+import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.render.model.json.JsonUnbakedModel;
 import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.item.DyeableItem;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
+import org.quiltmc.qsl.networking.api.client.ClientPlayNetworking;
 import repulica.cardstock.CardStock;
+import repulica.cardstock.api.CardManager;
 import repulica.cardstock.client.model.CardModelGenerator;
 import repulica.cardstock.client.model.DynamicModelVariantProvider;
 import repulica.cardstock.client.screen.CardBinderScreen;
@@ -29,7 +31,7 @@ public class CardStockClient implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient() {
-		ScreenRegistry.register(CardStock.CARD_BINDER_HANDLER, CardBinderScreen::new);
+		HandledScreens.register(CardStock.CARD_BINDER_HANDLER, CardBinderScreen::new);
 		ModelLoadingRegistry.INSTANCE.registerVariantProvider(manager -> new DynamicModelVariantProvider());
 		ModelLoadingRegistry.INSTANCE.registerModelProvider((manager, consumer) -> {
 			Collection<Identifier> cards = manager.findResources("models/item/card", string -> string.endsWith(".json"));
@@ -41,6 +43,7 @@ public class CardStockClient implements ClientModInitializer {
 				consumer.accept(new ModelIdentifier(new Identifier(id.getNamespace(), id.getPath().substring(START, id.getPath().length() - JSON_END)), "inventory"));
 			}
 		});
+		ClientPlayNetworking.registerGlobalReceiver(CardStock.CARD_SYNC, (server, handler, buf, responseSender) -> CardManager.INSTANCE.recievePacket(buf));
 		ColorProviderRegistry.ITEM.register(new CardColorProvider(), CardStock.CARD);
 		ColorProviderRegistry.ITEM.register((stack, tintIndex) -> tintIndex == 0? ((DyeableItem) stack.getItem()).getColor(stack) : 0xFFFFFF, CardStock.CARD_BINDER);
 	}

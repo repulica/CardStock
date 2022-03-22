@@ -21,9 +21,9 @@ public class CardPullCriterion extends AbstractCriterion<CardPullCriterion.Condi
 	}
 
 	public void trigger(ServerPlayerEntity player, ItemStack card) {
-		if (card.getOrCreateTag().contains("Card", NbtType.STRING)) {
-			Identifier id = new Identifier(card.getOrCreateTag().getString("Card"));
-			this.test(player, conditions -> id.equals(conditions.card));
+		if (card.getOrCreateNbt().contains("Card", NbtType.STRING)) {
+			Identifier id = new Identifier(card.getOrCreateNbt().getString("Card"));
+			this.trigger(player, conditions -> id.equals(conditions.card));
 		}
 	}
 

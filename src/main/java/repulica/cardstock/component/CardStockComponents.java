@@ -4,9 +4,9 @@ import dev.onyxstudios.cca.api.v3.component.ComponentKey;
 import dev.onyxstudios.cca.api.v3.component.ComponentRegistryV3;
 import dev.onyxstudios.cca.api.v3.entity.EntityComponentFactoryRegistry;
 import dev.onyxstudios.cca.api.v3.entity.EntityComponentInitializer;
+import dev.onyxstudios.cca.api.v3.entity.RespawnCopyStrategy;
 import dev.onyxstudios.cca.api.v3.item.ItemComponentFactoryRegistry;
 import dev.onyxstudios.cca.api.v3.item.ItemComponentInitializer;
-import nerdhub.cardinal.components.api.util.RespawnCopyStrategy;
 import net.minecraft.util.Identifier;
 import repulica.cardstock.CardStock;
 
@@ -20,6 +20,6 @@ public class CardStockComponents implements EntityComponentInitializer, ItemComp
 
 	@Override
 	public void registerItemComponentFactories(ItemComponentFactoryRegistry registry) {
-		registry.registerFor(CardStock.CARD_BINDER, CARD_BINDER, ItemCardBinderComponent::new);
+		registry.register(CardStock.CARD_BINDER, CARD_BINDER, ItemCardBinderComponent::new);
 	}
 }

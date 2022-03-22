@@ -33,22 +33,22 @@ public class CardPackItem extends Item {
 		if (!world.isClient) {
 			ServerPlayerEntity player = (ServerPlayerEntity) user;
 			ItemStack stack = user.getStackInHand(hand);
-			if (stack.getOrCreateTag().contains("Items")) {
-				NbtList list = stack.getOrCreateTag().getList("Items", NbtType.COMPOUND);
+			if (stack.getOrCreateNbt().contains("Items")) {
+				NbtList list = stack.getOrCreateNbt().getList("Items", NbtType.COMPOUND);
 				if (list.size() > 0) {
 					DefaultedList<ItemStack> stacks = DefaultedList.ofSize(list.size(), ItemStack.EMPTY);
-					Inventories.readNbt(stack.getOrCreateTag(), stacks);
+					Inventories.readNbt(stack.getOrCreateNbt(), stacks);
 					List<ItemStack> cards = stacks.stream().filter(e -> !e.isEmpty()).collect(Collectors.toCollection(ArrayList::new));
 					giveCards(player, stack, cards);
 				} else {
 					stack.decrement(1);
 				}
-			} else if (stack.getOrCreateTag().contains("Pack")) {
-				LootTable table = world.getServer().getLootManager().getTable(new Identifier(stack.getOrCreateTag().getString("Pack")));
+			} else if (stack.getOrCreateNbt().contains("Pack")) {
+				LootTable table = world.getServer().getLootManager().getTable(new Identifier(stack.getOrCreateNbt().getString("Pack")));
 				LootContext ctx = new LootContext.Builder((ServerWorld) world).build(LootContextTypes.EMPTY);
 				List<ItemStack> cards = table.generateLoot(ctx);
 				giveCards(player, stack, cards);
-				stack.getOrCreateTag().remove("Pack");
+				stack.getOrCreateNbt().remove("Pack");
 			} else {
 				stack.setCount(0);
 				return TypedActionResult.consume(ItemStack.EMPTY);
@@ -65,18 +65,18 @@ public class CardPackItem extends Item {
 		if (player.isSneaking()) {
 			for (ItemStack card : cards) {
 				CardStock.CARD_PULL.trigger(player, stack);
-				player.inventory.offerOrDrop(player.world, card);
+				player.getInventory().offerOrDrop(card);
 			}
 		} else {
 			ItemStack card = cards.remove(0);
 			CardStock.CARD_PULL.trigger(player, stack);
-			player.inventory.offerOrDrop(player.world, card);
+			player.getInventory().offerOrDrop(card);
 		}
 		if (!cards.isEmpty()) {
 			DefaultedList<ItemStack> remainder = DefaultedList.copyOf(ItemStack.EMPTY, cards.toArray(new ItemStack[]{}));
-			Inventories.writeNbt(stack.getOrCreateTag(), remainder);
+			Inventories.writeNbt(stack.getOrCreateNbt(), remainder);
 		}  else {
-			stack.getOrCreateTag().remove("Items");
+			stack.getOrCreateNbt().remove("Items");
 			stack.setCount(0);
 		}
 	}

@@ -1,5 +1,6 @@
 package repulica.cardstock.mixin;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.util.math.MatrixStack;
@@ -8,7 +9,6 @@ import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import repulica.cardstock.client.screen.CardBinderScreen;
@@ -20,21 +20,27 @@ public abstract class MixinHandledScreen extends Screen {
 		super(title);
 	}
 
+	private static final int FILL_COLOR = 0x80FFFFFF;
+	private static final ThreadLocal<Screen> CALLING_SCREEN = new ThreadLocal<>();
 	private static final ThreadLocal<Slot> SLOT_LOCAL = new ThreadLocal<>();
 
 	@Inject(method="render", at=@At(value="INVOKE", target="Lnet/minecraft/client/gui/screen/ingame/HandledScreen;isPointOverSlot(Lnet/minecraft/screen/slot/Slot;DD)Z"), locals= LocalCapture.CAPTURE_FAILEXCEPTION)
-	private void cacheSlot(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo info, int x, int y, int slotX, int slotY, int slotIndex, Slot slot) {
+	private void cacheSlot(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci, int x, int y, MatrixStack matrixStack, int focusedSlot, Slot slot) {
+		CALLING_SCREEN.set(this);
 		SLOT_LOCAL.set(slot);
 	}
 
-	@Redirect(method="render", at=@At(value="INVOKE", target="Lnet/minecraft/client/gui/screen/ingame/HandledScreen;fillGradient(Lnet/minecraft/client/util/math/MatrixStack;IIIIII)V"))
-	protected void hookSmallCardDraw(HandledScreen<?> caller, MatrixStack matrices, int startX, int startY, int endX, int endY, int colorStart, int colorEnd) {
-		if (caller instanceof CardBinderScreen && SLOT_LOCAL.get().inventory instanceof CardBinderInventory) {
-			this.fillGradient(matrices, startX+4, startY+1, endX-4, startY+2, colorStart, colorEnd);
-			this.fillGradient(matrices, startX+3, startY+2, endX-3, endY-2, colorStart, colorEnd);
-			this.fillGradient(matrices, startX+4, endY-2, endX-4, endY-1, colorStart, colorEnd);
-		} else {
-			this.fillGradient(matrices, startX, startY, endX, endY, colorStart, colorEnd);
+	@Inject(method = "drawSlotHighlight", at = @At("HEAD"), cancellable = true)
+	private static void hookSmallCardDraw(MatrixStack matrices, int x, int y, int z, CallbackInfo info) {
+		if (CALLING_SCREEN.get() instanceof CardBinderScreen && SLOT_LOCAL.get().inventory instanceof CardBinderInventory) {
+			RenderSystem.disableDepthTest();
+			RenderSystem.colorMask(true, true, true, false);
+			fillGradient(matrices, x+4, y+1, x+12, y+2, FILL_COLOR, FILL_COLOR, z);
+			fillGradient(matrices, x+3, y+2, x+13, y+14, FILL_COLOR, FILL_COLOR, z);
+			fillGradient(matrices, x+4, y+14, x+12, y+15, FILL_COLOR, FILL_COLOR, z);
+			RenderSystem.colorMask(true, true, true, true);
+			RenderSystem.enableDepthTest();
+			info.cancel();
 		}
 	}
 }

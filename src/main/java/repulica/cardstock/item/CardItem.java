@@ -3,6 +3,7 @@ package repulica.cardstock.item;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.client.item.TooltipData;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.LiteralText;
@@ -14,8 +15,10 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import repulica.cardstock.api.Card;
 import repulica.cardstock.api.CardManager;
+import repulica.cardstock.client.tooltip.CardTooltipComponent;
 
 import java.util.List;
+import java.util.Optional;
 
 public class CardItem extends Item {
 
@@ -35,8 +38,8 @@ public class CardItem extends Item {
 
 	@Override
 	public Text getName(ItemStack stack) {
-		if (stack.hasTag() && stack.getOrCreateTag().contains("Card", NbtType.STRING)) {
-			return new TranslatableText("card." + stack.getOrCreateTag().getString("Card")
+		if (stack.hasNbt() && stack.getOrCreateNbt().contains("Card", NbtType.STRING)) {
+			return new TranslatableText("card." + stack.getOrCreateNbt().getString("Card")
 					.replace(':', '.')
 					.replace('/', '.')
 			);
@@ -63,5 +66,10 @@ public class CardItem extends Item {
 		if (context.isAdvanced()) {
 			tooltip.add(new TranslatableText("text.cardstock.source").formatted(Formatting.BLUE, Formatting.ITALIC));
 		}
+	}
+
+	@Override
+	public Optional<TooltipData> getTooltipData(ItemStack stack) {
+		return CardTooltipComponent.of(stack).or(() -> super.getTooltipData(stack));
 	}
 }

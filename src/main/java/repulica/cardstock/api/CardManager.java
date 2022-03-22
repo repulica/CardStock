@@ -4,13 +4,10 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import dev.hbeck.kdl.objects.*;
 import dev.hbeck.kdl.parse.KDLParser;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
-import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -18,6 +15,9 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
+import org.quiltmc.qsl.networking.api.PacketByteBufs;
+import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
+import org.quiltmc.qsl.resource.loader.api.reloader.SimpleSynchronousResourceReloader;
 import repulica.cardstock.CardStock;
 import repulica.cardstock.component.CardBinderComponent;
 import repulica.cardstock.component.CardBinderInventory;
@@ -26,7 +26,7 @@ import repulica.cardstock.component.CardStockComponents;
 import java.io.IOException;
 import java.util.*;
 
-public class CardManager implements SimpleSynchronousResourceReloadListener {
+public class CardManager implements SimpleSynchronousResourceReloader {
 	public static final CardManager INSTANCE = new CardManager();
 	private static final KDLParser PARSER = new KDLParser();
 	private static final String PREFIX = "cardstock/sets";
@@ -75,8 +75,8 @@ public class CardManager implements SimpleSynchronousResourceReloadListener {
 	 * @return the set that card belongs to or the default missingno set
 	 */
 	public CardSet getSet(ItemStack stack) {
-		if (stack.hasTag() && stack.getTag().contains("Card", NbtType.STRING)) {
-			String cardName = stack.getTag().getString("Card");
+		if (stack.hasNbt() && stack.getNbt().contains("Card", NbtElement.STRING_TYPE)) {
+			String cardName = stack.getNbt().getString("Card");
 			return getSet(new Identifier(cardName.substring(0, cardName.lastIndexOf('/'))));
 		}
 		return defaultMissingnoSet;
@@ -87,8 +87,8 @@ public class CardManager implements SimpleSynchronousResourceReloadListener {
 	 * @return the card this stack has or the default missingno card
 	 */
 	public Card getCard(ItemStack stack) {
-		if (stack.hasTag() && stack.getTag().contains("Card", NbtType.STRING)) {
-			return getCard(new Identifier(stack.getTag().getString("Card")));
+		if (stack.hasNbt() && stack.getNbt().contains("Card", NbtElement.STRING_TYPE)) {
+			return getCard(new Identifier(stack.getNbt().getString("Card")));
 		}
 		return defaultMissingno;
 	}
@@ -99,12 +99,12 @@ public class CardManager implements SimpleSynchronousResourceReloadListener {
 	 */
 	public List<Card> getAllHeldCards(PlayerEntity player) {
 		List<Card> cards = new ArrayList<>();
-		PlayerInventory inv = player.inventory;
+		PlayerInventory inv = player.getInventory();
 		if (!inv.isEmpty()) {
 			for (int i = 0; i < inv.size(); i++) {
 				ItemStack stack = inv.getStack(i);
-				if (stack.getItem() == CardStock.CARD && stack.getOrCreateTag().contains("Card")) {
-					cards.add(getCard(new Identifier(stack.getOrCreateTag().getString("Card"))));
+				if (stack.getItem() == CardStock.CARD && stack.getOrCreateNbt().contains("Card")) {
+					cards.add(getCard(new Identifier(stack.getOrCreateNbt().getString("Card"))));
 				} else if (CardStockComponents.CARD_BINDER.isProvidedBy(stack)) {
 					addBinderCards(cards, CardStockComponents.CARD_BINDER.get(stack));
 				}
@@ -122,13 +122,13 @@ public class CardManager implements SimpleSynchronousResourceReloadListener {
 	public List<Card> getHeldSetCards(PlayerEntity player, Identifier setId) {
 		CardSet set = getSet(setId);
 		List<Card> cards = new ArrayList<>();
-		PlayerInventory inv = player.inventory;
+		PlayerInventory inv = player.getInventory();
 		if (!inv.isEmpty()) {
 			for (int i = 0; i < inv.size(); i++) {
 				ItemStack stack = inv.getStack(i);
-				if (stack.getItem() == CardStock.CARD && stack.getOrCreateTag().contains("Card")) {
+				if (stack.getItem() == CardStock.CARD && stack.getOrCreateNbt().contains("Card")) {
 					if (set == getSet(stack)) {
-						cards.add(getCard(new Identifier(stack.getOrCreateTag().getString("Card"))));
+						cards.add(getCard(new Identifier(stack.getOrCreateNbt().getString("Card"))));
 					}
 				} else if (CardStockComponents.CARD_BINDER.isProvidedBy(stack)) {
 					addBinderSetCards(cards, CardStockComponents.CARD_BINDER.get(stack), set);
@@ -185,7 +185,7 @@ public class CardManager implements SimpleSynchronousResourceReloadListener {
 		for (Identifier id : ids) {
 			try {
 				Identifier setId = new Identifier(id.getNamespace(), id.getPath().substring(PREFIX.length() + 1, id.getPath().length() - SUFFIX_LENGTH));
-				KDLDocument doc = PARSER.parse(manager.getResource(id).getInputStream());
+				KDLDocument doc = PARSER.parse(manager.method_14486(id).getInputStream());
 				Identifier emblem = new Identifier(CardStock.MODID, "textures/gui/missingno.png");
 				Map<String, Card> parsedCards = new HashMap<>();
 				for (KDLNode node : doc.getNodes()) {
@@ -286,7 +286,7 @@ public class CardManager implements SimpleSynchronousResourceReloadListener {
 	}
 
 	@Override
-	public Identifier getFabricId() {
+	public Identifier getQuiltId() {
 		return new Identifier(CardStock.MODID, "card_manager");
 	}
 
@@ -295,8 +295,8 @@ public class CardManager implements SimpleSynchronousResourceReloadListener {
 		if (!binder.isEmpty()) {
 			for (int i = 0; i < binder.size(); i++) {
 				ItemStack card = binder.getStack(i);
-				if (card.getItem() == CardStock.CARD && card.getOrCreateTag().contains("Card")) {
-					cards.add(getCard(new Identifier(card.getOrCreateTag().getString("Card"))));
+				if (card.getItem() == CardStock.CARD && card.getOrCreateNbt().contains("Card")) {
+					cards.add(getCard(new Identifier(card.getOrCreateNbt().getString("Card"))));
 				}
 			}
 		}
@@ -307,9 +307,9 @@ public class CardManager implements SimpleSynchronousResourceReloadListener {
 		if (!binder.isEmpty()) {
 			for (int i = 0; i < binder.size(); i++) {
 				ItemStack stack = binder.getStack(i);
-				if (stack.getItem() == CardStock.CARD && stack.getOrCreateTag().contains("Card")) {
+				if (stack.getItem() == CardStock.CARD && stack.getOrCreateNbt().contains("Card")) {
 					if (set == getSet(stack)) {
-						cards.add(getCard(new Identifier(stack.getOrCreateTag().getString("Card"))));
+						cards.add(getCard(new Identifier(stack.getOrCreateNbt().getString("Card"))));
 					}
 				}
 			}
@@ -322,7 +322,7 @@ public class CardManager implements SimpleSynchronousResourceReloadListener {
 			for (String name : set.getCards().keySet()) {
 				Identifier cardId = new Identifier(id.getNamespace(), id.getPath() + '/' + name);
 				ItemStack cardStack = new ItemStack(CardStock.CARD);
-				cardStack.getOrCreateTag().putString("Card", cardId.toString());
+				cardStack.getOrCreateNbt().putString("Card", cardId.toString());
 				toDisplay.add(cardStack);
 			}
 		}

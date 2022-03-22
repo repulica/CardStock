@@ -47,8 +47,8 @@
   "text.retromc.witchery.3": "alongside its powerful magic.",
   "card.cardstock.retromc.yttr": "Yttr",
   "text.retromc.yttr.1": "Wait, that can't be right.",
-  "text.retromc.yttr.2": "Didn't that come out this year?",
-  "text.retromc.yttr.3": "It could be in the pack right now!",
+  "text.retromc.yttr.2": "Didn't that come out last year?",
+  "text.retromc.yttr.3": "You should go play it right now!",
 
   "card.cardstock.retromc.dartcraft": "DartCraft",
   "text.retromc.dartcraft.1": "This Zelda-inspired project",
@@ -67,7 +67,7 @@
   "text.retromc.universalelectricity.2": "this mod now lives on as",
   "text.retromc.universalelectricity.3": "legacy code in Mekanism.",
   
-  "card.cardstockretromc.artifice": "Artifice",
+  "card.cardstock.retromc.artifice": "Artifice",
   "text.retromc.artifice.1": "Artifice's collection of worldgen and",
   "text.retromc.artifice.2": "decorative blocks are a boon to builders",
   "text.retromc.artifice.3": "in all sorts of situations.",
