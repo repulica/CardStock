@@ -37,7 +37,6 @@ import java.util.Map;
 
 @Mixin(LootManager.class)
 public class MixinLootManager {
-	@Shadow @Final private static Logger LOGGER;
 	private static final KDLParser PARSER = new KDLParser();
 	private static final int PREFIX_LENGTH = "cardstock/".length();
 	private static final int SUFFIX_LENGTH = ".kdl".length();
@@ -80,7 +79,7 @@ public class MixinLootManager {
 				//todo: print the table json
 				tableMap.put(tableId, table);
 			} catch(IOException e) {
-				LOGGER.error("Could not open kdl card pack document: " + e.getMessage());
+				CardStock.LOGGER.error("Could not open kdl card pack document: " + e.getMessage());
 			}
 		}
 	}

@@ -47,7 +47,7 @@ public class CardModelGenerator {
 		map.put(Direction.SOUTH, new ModelElementFace(null, layer, key, new ModelElementTexture(new float[]{0.0F, 0.0F, 16.0F, 16.0F}, 0)));
 		map.put(Direction.NORTH, new ModelElementFace(null, layer, key, new ModelElementTexture(new float[]{16.0F, 0.0F, 0.0F, 16.0F}, 0)));
 		List<ModelElement> list = Lists.newArrayList();
-		list.add(new ModelElement(new Vec3f(0.0F, 0.0F, FRONT), new Vec3f(16.0F, 16.0F, FRONT), map, null, true));
+		list.add(new ModelElement(new Vec3f(0.0F, 0.0F, FRONT), new Vec3f(16.0F, 16.0F, BACK), map, null, true));
 		list.addAll(this.addSubComponents(sprite, key, layer));
 		return list;
 	}
@@ -124,16 +124,16 @@ public class CardModelGenerator {
 			map.put(side.getDirection(), new ModelElementFace(null, layer, key, new ModelElementTexture(new float[]{u1, v1, u2, v2}, 0)));
 			switch(side) {
 				case UP:
-					list.add(new ModelElement(new Vec3f(x1, y1, FRONT), new Vec3f(x2, y1, FRONT), map, null, true));
+					list.add(new ModelElement(new Vec3f(x1, y1, FRONT), new Vec3f(x2, y1, BACK), map, null, true));
 					break;
 				case DOWN:
-					list.add(new ModelElement(new Vec3f(x1, y2, FRONT), new Vec3f(x2, y2, FRONT), map, null, true));
+					list.add(new ModelElement(new Vec3f(x1, y2, FRONT), new Vec3f(x2, y2, BACK), map, null, true));
 					break;
 				case LEFT:
-					list.add(new ModelElement(new Vec3f(x1, y1, FRONT), new Vec3f(x1, y2, FRONT), map, null, true));
+					list.add(new ModelElement(new Vec3f(x1, y1, FRONT), new Vec3f(x1, y2, BACK), map, null, true));
 					break;
 				case RIGHT:
-					list.add(new ModelElement(new Vec3f(x2, y1, FRONT), new Vec3f(x2, y2, FRONT), map, null, true));
+					list.add(new ModelElement(new Vec3f(x2, y1, FRONT), new Vec3f(x2, y2, BACK), map, null, true));
 			}
 		}
 

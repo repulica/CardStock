@@ -15,7 +15,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.quiltmc.qsl.item.group.api.QuiltItemGroup;
 import org.quiltmc.qsl.networking.api.ServerPlayConnectionEvents;
-import org.quiltmc.qsl.networking.api.client.ClientPlayNetworking;
 import org.quiltmc.qsl.resource.loader.api.ResourceLoader;
 import org.quiltmc.qsl.resource.loader.api.ResourcePackActivationType;
 import repulica.cardstock.api.CardManager;
@@ -44,7 +43,7 @@ public class CardStock implements ModInitializer {
 
 	//todo: possible to be random card?
 	public static final ItemGroup CARDS_GROUP = QuiltItemGroup.builder(new Identifier(MODID, "cards"))
-			.icon(() -> new ItemStack(CARD))
+			.icon(() -> new ItemStack(CARD_BINDER))
 			.appendItems(CardManager.INSTANCE::appendCards)
 			.build();
 
@@ -54,7 +53,7 @@ public class CardStock implements ModInitializer {
 		ResourceLoader.get(ResourceType.SERVER_DATA).registerReloader(CardManager.INSTANCE);
 		Registry.register(Registry.LOOT_FUNCTION_TYPE, new Identifier(MODID, "card_pack"), CardPackLootFunction.TYPE);
 		ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> sender.sendPacket(CARD_SYNC, CardManager.INSTANCE.getBuf()));
-		FabricLoader.getInstance().getModContainer(MODID).ifPresent(modContainer -> ResourceLoader.registerBuiltinResourcePack(new Identifier(MODID, "retromc"), modContainer, ResourcePackActivationType.DEFAULT_ENABLED));
+		FabricLoader.getInstance().getModContainer(MODID).ifPresent(modContainer -> ResourceLoader.registerBuiltinResourcePack(new Identifier(MODID, "retromc"), modContainer, ResourcePackActivationType.NORMAL));
 	}
 
 }
