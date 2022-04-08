@@ -21,7 +21,7 @@ repositories {
 			includeGroupByRegex 'org.quiltmc.qsl(.[a-z_]+)?'
 		}
 	}
-	flatDir { dirs "libs" }
+	mavenLocal()
 	maven { url "https://ladysnake.jfrog.io/artifactory/mods" }
 }
 
@@ -52,8 +52,7 @@ dependencies {
 	modImplementation include("dev.onyxstudios.cardinal-components-api:cardinal-components-base:${project.cardinal_version}") { exclude group: "net.fabricmc.fabric-api" }
 	modImplementation include("dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${project.cardinal_version}") { exclude group: "net.fabricmc.fabric-api" }
 	modImplementation include("dev.onyxstudios.cardinal-components-api:cardinal-components-item:${project.cardinal_version}") { exclude group: "net.fabricmc.fabric-api" }
-	implementation include(name: "kdl4j-0.1.0")
-//	include name: "kdl4j-0.1.0"
+	implementation include("dev.hbeck.kdl:kdl4j:0.1.0")
 }
 
 java {

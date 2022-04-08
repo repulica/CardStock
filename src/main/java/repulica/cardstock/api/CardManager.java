@@ -203,7 +203,7 @@ public class CardManager implements SimpleSynchronousResourceReloader {
 							for (KDLNode child : children.get().getNodes()) {
 								switch (child.getIdentifier()) {
 									case "rarity":
-										rarity = child.getArgs().get(0).getAsNumber().orElse(KDLNumber.from(1)).getAsBigDecimal().intValue();
+										rarity = child.getArgs().get(0).getAsNumber().orElse(KDLNumber.from(1)).getValue().intValue();
 										break;
 									case "info":
 										info = parseText(child);
@@ -246,7 +246,7 @@ public class CardManager implements SimpleSynchronousResourceReloader {
 			return Text.Serializer.fromJson(arr);
 		} else {
 			JsonObject json = new JsonObject();
-			Map<String, KDLValue> props = node.getProps();
+			Map<String, KDLValue<?>> props = node.getProps();
 			if (props.containsKey("text")) {
 				json.addProperty("text", props.get("text").getAsString().getValue());
 			} else if (props.containsKey("translate")) {
@@ -259,19 +259,19 @@ public class CardManager implements SimpleSynchronousResourceReloader {
 				json.addProperty("font", props.get("font").getAsString().getValue());
 			}
 			if (props.containsKey("bold")) {
-				json.addProperty("bold", props.get("bold").getAsBoolean().orElse(KDLBoolean.FALSE).getValue());
+				json.addProperty("bold", props.get("bold").getAsBoolean().orElse(new KDLBoolean(false)).getValue());
 			}
 			if (props.containsKey("italic")) {
-				json.addProperty("italic", props.get("italic").getAsBoolean().orElse(KDLBoolean.FALSE).getValue());
+				json.addProperty("italic", props.get("italic").getAsBoolean().orElse(new KDLBoolean(false)).getValue());
 			}
 			if (props.containsKey("underline")) {
-				json.addProperty("underline", props.get("underline").getAsBoolean().orElse(KDLBoolean.FALSE).getValue());
+				json.addProperty("underline", props.get("underline").getAsBoolean().orElse(new KDLBoolean(false)).getValue());
 			}
 			if (props.containsKey("strikethrough")) {
-				json.addProperty("strikethrough", props.get("strikethrough").getAsBoolean().orElse(KDLBoolean.FALSE).getValue());
+				json.addProperty("strikethrough", props.get("strikethrough").getAsBoolean().orElse(new KDLBoolean(false)).getValue());
 			}
 			if (props.containsKey("obfuscated")) {
-				json.addProperty("obfuscated", props.get("obfuscated").getAsBoolean().orElse(KDLBoolean.FALSE).getValue());
+				json.addProperty("obfuscated", props.get("obfuscated").getAsBoolean().orElse(new KDLBoolean(false)).getValue());
 			}
 			if (node.getChild().isPresent()) {
 				JsonArray arr = new JsonArray();

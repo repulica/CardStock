@@ -17,10 +17,7 @@ import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Pair;
 import net.minecraft.util.profiler.Profiler;
-import org.slf4j.Logger;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -30,6 +27,7 @@ import repulica.cardstock.api.CardPack;
 import repulica.cardstock.data.CardPackLootFunction;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -99,7 +97,7 @@ public class MixinLootManager {
 					cardCount = flattenToInt(node.getArgs().get(0));
 					break;
 				case "weights":
-					Map<String, KDLValue> props = node.getProps();
+					Map<String, KDLValue<?>> props = node.getProps();
 					if (props.containsKey("r1")) {
 						weights.put(1, flattenToInt(props.get("r1")));
 					}
@@ -121,7 +119,7 @@ public class MixinLootManager {
 						if (child.getIdentifier().equals("rarity")) {
 							int rarity = flattenToInt(child.getArgs().get(0));
 							int count = 1;
-							Map<String, KDLValue> childProps = child.getProps();
+							Map<String, KDLValue<?>> childProps = child.getProps();
 							if (childProps.containsKey("count")) {
 								count = flattenToInt(childProps.get("count"));
 							}
@@ -154,11 +152,11 @@ public class MixinLootManager {
 		return new CardPack(set, cardCount, weights, bonuses);
 	}
 
-	private int flattenToInt(KDLValue val) {
-		return val.getAsNumber().orElse(KDLNumber.from(-1)).getAsBigDecimal().intValue();
+	private int flattenToInt(KDLValue<?> val) {
+		return val.getAsNumber().orElse(KDLNumber.from(-1)).getValue().intValue();
 	}
 
-	private float flattenToFloat(KDLValue val) {
-		return val.getAsNumber().orElse(KDLNumber.from(-1)).getAsBigDecimal().floatValue();
+	private float flattenToFloat(KDLValue<?> val) {
+		return val.getAsNumber().orElse(KDLNumber.from(-1)).getValue().floatValue();
 	}
 }
