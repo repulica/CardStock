@@ -1,11 +1,11 @@
 package repulica.cardstock.item;
 
-import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.item.TooltipData;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -38,7 +38,7 @@ public class CardItem extends Item {
 
 	@Override
 	public Text getName(ItemStack stack) {
-		if (stack.hasNbt() && stack.getOrCreateNbt().contains("Card", NbtType.STRING)) {
+		if (stack.hasNbt() && stack.getOrCreateNbt().contains("Card", NbtElement.STRING_TYPE)) {
 			return new TranslatableText("card." + stack.getOrCreateNbt().getString("Card")
 					.replace(':', '.')
 					.replace('/', '.')

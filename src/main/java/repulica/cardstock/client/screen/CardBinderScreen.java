@@ -28,7 +28,7 @@ public class CardBinderScreen extends GenericContainerScreen {
 	@Override
 	protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-		this.client.getTextureManager().bindTexture(isAprilFools? APRILFOOLS : TEXTURE);
+		RenderSystem.setShaderTexture(0, isAprilFools? APRILFOOLS : TEXTURE);
 		int i = (this.width - this.backgroundWidth) / 2;
 		int j = (this.height - this.backgroundHeight) / 2;
 		this.drawTexture(matrices, i, j, 0, 0, this.backgroundWidth, 6 * 18 + 17);

@@ -3,7 +3,6 @@ package repulica.cardstock.client.model;
 import com.mojang.datafixers.util.Pair;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
-import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.model.*;
@@ -14,6 +13,7 @@ import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -38,7 +38,7 @@ public class DynamicModel implements BakedModel, FabricBakedModel, UnbakedModel 
 	@Override
 	public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
 		if (stack.getItem() == CardStock.CARD) {
-			if (stack.hasNbt() && stack.getNbt().contains("Card", NbtType.STRING)) {
+			if (stack.hasNbt() && stack.getNbt().contains("Card", NbtElement.STRING_TYPE)) {
 				Identifier cardId = new Identifier(stack.getNbt().getString("Card"));
 				ModelIdentifier modelId = new ModelIdentifier(new Identifier(cardId.getNamespace(), "card/" + cardId.getPath()), "inventory");
 				getDynModel(modelId, MISSINGNO_CARD).emitItemQuads(stack, randomSupplier, context);
@@ -46,7 +46,7 @@ public class DynamicModel implements BakedModel, FabricBakedModel, UnbakedModel 
 				((FabricBakedModel) MANAGER.getModel(MISSINGNO_CARD)).emitItemQuads(stack, randomSupplier, context);
 			}
 		} else if (stack.getItem() == CardStock.CARD_PACK) {
-			if (stack.hasNbt() && stack.getNbt().contains("Pack", NbtType.STRING)) {
+			if (stack.hasNbt() && stack.getNbt().contains("Pack", NbtElement.STRING_TYPE)) {
 				Identifier packId = new Identifier(stack.getNbt().getString("Pack"));
 				ModelIdentifier modelId = new ModelIdentifier(new Identifier(packId.getNamespace(), "pack/" + packId.getPath().substring("packs/".length())), "inventory");
 				getDynModel(modelId, MISSINGNO_PACK).emitItemQuads(stack, randomSupplier, context);

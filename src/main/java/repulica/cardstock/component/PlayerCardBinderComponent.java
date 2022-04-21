@@ -1,8 +1,8 @@
 package repulica.cardstock.component;
 
-import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 
 public class PlayerCardBinderComponent implements CardBinderComponent {
 	private CardBinderInventory inv = new CardBinderInventory();
@@ -19,7 +19,7 @@ public class PlayerCardBinderComponent implements CardBinderComponent {
 
 	@Override
 	public void readFromNbt(NbtCompound tag) {
-		inv.readNbtList(tag.getList("Items", NbtType.COMPOUND));
+		inv.readNbtList(tag.getList("Items", NbtElement.COMPOUND_TYPE));
 	}
 
 	@Override

@@ -1,10 +1,10 @@
 package repulica.cardstock.data;
 
 import com.google.gson.JsonObject;
-import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.advancement.criterion.AbstractCriterion;
 import net.minecraft.advancement.criterion.AbstractCriterionConditions;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.predicate.entity.AdvancementEntityPredicateDeserializer;
 import net.minecraft.predicate.entity.EntityPredicate;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -21,7 +21,7 @@ public class CardPullCriterion extends AbstractCriterion<CardPullCriterion.Condi
 	}
 
 	public void trigger(ServerPlayerEntity player, ItemStack card) {
-		if (card.getOrCreateNbt().contains("Card", NbtType.STRING)) {
+		if (card.getOrCreateNbt().contains("Card", NbtElement.STRING_TYPE)) {
 			Identifier id = new Identifier(card.getOrCreateNbt().getString("Card"));
 			this.trigger(player, conditions -> id.equals(conditions.card));
 		}

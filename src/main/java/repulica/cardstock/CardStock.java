@@ -1,7 +1,5 @@
 package repulica.cardstock;
 
-import net.fabricmc.api.ModInitializer;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -13,6 +11,9 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.quiltmc.loader.api.ModContainer;
+import org.quiltmc.loader.api.QuiltLoader;
+import org.quiltmc.qsl.base.api.entrypoint.ModInitializer;
 import org.quiltmc.qsl.item.group.api.QuiltItemGroup;
 import org.quiltmc.qsl.networking.api.ServerPlayConnectionEvents;
 import org.quiltmc.qsl.resource.loader.api.ResourceLoader;
@@ -48,12 +49,12 @@ public class CardStock implements ModInitializer {
 			.build();
 
 	@Override
-	public void onInitialize() {
+	public void onInitialize(ModContainer container) {
 		CARD_BINDER_HANDLER = Registry.register(Registry.SCREEN_HANDLER, new Identifier(MODID), new ScreenHandlerType<>((syncid, inv) -> new GenericContainerScreenHandler(CARD_BINDER_HANDLER, syncid, inv, new CardBinderInventory(), 6)));
 		ResourceLoader.get(ResourceType.SERVER_DATA).registerReloader(CardManager.INSTANCE);
 		Registry.register(Registry.LOOT_FUNCTION_TYPE, new Identifier(MODID, "card_pack"), CardPackLootFunction.TYPE);
 		ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> sender.sendPacket(CARD_SYNC, CardManager.INSTANCE.getBuf()));
-		FabricLoader.getInstance().getModContainer(MODID).ifPresent(modContainer -> ResourceLoader.registerBuiltinResourcePack(new Identifier(MODID, "retromc"), modContainer, ResourcePackActivationType.NORMAL));
+		QuiltLoader.getModContainer(MODID).ifPresent(modContainer -> ResourceLoader.registerBuiltinResourcePack(new Identifier(MODID, "retromc"), modContainer, ResourcePackActivationType.NORMAL));
 	}
 
 }

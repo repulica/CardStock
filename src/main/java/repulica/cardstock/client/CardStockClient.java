@@ -1,6 +1,5 @@
 package repulica.cardstock.client;
 
-import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
@@ -9,6 +8,8 @@ import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.item.DyeableItem;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
+import org.quiltmc.loader.api.ModContainer;
+import org.quiltmc.qsl.base.api.entrypoint.client.ClientModInitializer;
 import org.quiltmc.qsl.networking.api.client.ClientPlayNetworking;
 import repulica.cardstock.CardStock;
 import repulica.cardstock.api.CardManager;
@@ -30,7 +31,7 @@ public class CardStockClient implements ClientModInitializer {
 	public static final CardModelGenerator CARD_MODEL_GENERATOR = new CardModelGenerator();
 
 	@Override
-	public void onInitializeClient() {
+	public void onInitializeClient(ModContainer container) {
 		HandledScreens.register(CardStock.CARD_BINDER_HANDLER, CardBinderScreen::new);
 		ModelLoadingRegistry.INSTANCE.registerVariantProvider(manager -> new DynamicModelVariantProvider());
 		ModelLoadingRegistry.INSTANCE.registerModelProvider((manager, consumer) -> {

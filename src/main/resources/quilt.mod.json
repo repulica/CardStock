@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "quilt_loader": {
+    "group": "repulica",
+    "id": "cardstock",
+    "version": "${version}",
+    "metadata": {
+      "name": "CardStock",
+      "description": "data-driven trading cards for fabric",
+      "authors": [
+        "repulica"
+      ],
+      "contact": {},
+      "license": "MPL-2.0",
+      "icon": "assets/cardstock/icon.png"
+    },
+    "environment": "*",
+    "entrypoints": {
+      "init": [
+        "repulica.cardstock.CardStock"
+      ],
+      "client_init": [
+        "repulica.cardstock.client.CardStockClient"
+      ],
+      "cardinal-components-entity": [
+        "repulica.cardstock.component.CardStockComponents"
+      ],
+      "cardinal-components-item": [
+        "repulica.cardstock.component.CardStockComponents"
+      ]
+    },
+    "intermediate_mappings": "net.fabricmc:intermediary",
+    "depends": [
+      {
+        "id": "quilt_loader"
+      }
+    ]
+  },
+  "mixin": [
+    "mixins.cardstock.json"
+  ],
+  "cardinal-components": [
+    "cardstock:card_binder"
+  ]
+}

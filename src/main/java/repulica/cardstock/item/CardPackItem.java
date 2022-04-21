@@ -1,14 +1,13 @@
 package repulica.cardstock.item;
 
-import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventories;
-import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootTable;
 import net.minecraft.loot.context.LootContext;
 import net.minecraft.loot.context.LootContextTypes;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -34,7 +33,7 @@ public class CardPackItem extends Item {
 			ServerPlayerEntity player = (ServerPlayerEntity) user;
 			ItemStack stack = user.getStackInHand(hand);
 			if (stack.getOrCreateNbt().contains("Items")) {
-				NbtList list = stack.getOrCreateNbt().getList("Items", NbtType.COMPOUND);
+				NbtList list = stack.getOrCreateNbt().getList("Items", NbtElement.COMPOUND_TYPE);
 				if (list.size() > 0) {
 					DefaultedList<ItemStack> stacks = DefaultedList.ofSize(list.size(), ItemStack.EMPTY);
 					Inventories.readNbt(stack.getOrCreateNbt(), stacks);
