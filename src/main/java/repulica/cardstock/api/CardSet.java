@@ -18,7 +18,7 @@ public class CardSet {
 		this.cards = cards;
 		this.rarityMap = new Int2ObjectArrayMap<>();
 		for (String card : cards.keySet()) {
-			rarityMap.computeIfAbsent(cards.get(card).getRarity(), ArrayList::new).add(card);
+			rarityMap.computeIfAbsent(cards.get(card).rarity(), ArrayList::new).add(card);
 		}
 	}
 

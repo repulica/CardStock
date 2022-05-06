@@ -317,6 +317,8 @@ public class CardManager implements SimpleSynchronousResourceReloader {
 	}
 
 	public void appendCards(List<ItemStack> toDisplay) {
+		toDisplay.add(new ItemStack(CardStock.CARD_BINDER));
+		toDisplay.add(new ItemStack(CardStock.ENDER_CARD_BINDER));
 		for (Identifier id : sets.keySet()) {
 			CardSet set = sets.get(id);
 			for (String name : set.getCards().keySet()) {
@@ -340,12 +342,12 @@ public class CardManager implements SimpleSynchronousResourceReloader {
 			for (String key : cards.keySet()) {
 				buf.writeString(key); //name of the card
 				Card card = cards.get(key);
-				buf.writeVarInt(card.getRarity()); //rarity of the card
-				buf.writeString(card.getArtist()); //artist of the card
-				buf.writeString(card.getDate()); //date of the card
-				buf.writeText(card.getInfo()); //card info
-				buf.writeVarInt(card.getLore().size()); //number of lore lines
-				for (Text line : card.getLore()) {
+				buf.writeVarInt(card.rarity()); //rarity of the card
+				buf.writeString(card.artist()); //artist of the card
+				buf.writeString(card.date()); //date of the card
+				buf.writeText(card.info()); //card info
+				buf.writeVarInt(card.lore().size()); //number of lore lines
+				for (Text line : card.lore()) {
 					buf.writeText(line); //line of lore
 				}
 			}

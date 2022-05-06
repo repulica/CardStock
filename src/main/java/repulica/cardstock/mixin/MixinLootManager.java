@@ -27,7 +27,6 @@ import repulica.cardstock.api.CardPack;
 import repulica.cardstock.data.CardPackLootFunction;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -48,25 +47,25 @@ public class MixinLootManager {
 				KDLDocument doc = PARSER.parse(manager.method_14486(id).getInputStream());
 				CardPack pack = parsePackDoc(tableId, doc);
 				int bonuses = 0;
-				for (CardPack.Bonus bonus : pack.getBonuses()) {
+				for (CardPack.Bonus bonus : pack.bonuses()) {
 					bonuses += bonus.getCount();
 				}
-				if (bonuses > pack.getCardCount()) {
+				if (bonuses > pack.cardCount()) {
 					throw new IllegalArgumentException("Card pack " + tableId + " has more bonuses than drawable cards!");
 				}
-				int rawPulls = pack.getCardCount() - bonuses;
+				int rawPulls = pack.cardCount() - bonuses;
 				LootTable.Builder builder = new LootTable.Builder();
 				FabricLootPoolBuilder mainPool = FabricLootPoolBuilder.builder().rolls(ConstantLootNumberProvider.create(rawPulls));
-				for (int rarity : pack.getWeights().keySet()) {
-					int weight = pack.getWeights().get(rarity);
-					mainPool.withEntry(ItemEntry.builder(CardStock.CARD).weight(weight).apply(CardPackLootFunction.builder(pack.getSet(), rarity, null)).build());
+				for (int rarity : pack.weights().keySet()) {
+					int weight = pack.weights().get(rarity);
+					mainPool.withEntry(ItemEntry.builder(CardStock.CARD).weight(weight).apply(CardPackLootFunction.builder(pack.set(), rarity, null)).build());
 				}
 				builder.pool(mainPool);
-				for (CardPack.Bonus bonus : pack.getBonuses()) {
+				for (CardPack.Bonus bonus : pack.bonuses()) {
 					FabricLootPoolBuilder pool = FabricLootPoolBuilder.builder().rolls(ConstantLootNumberProvider.create(bonus.getCount()));
 					pool.withEntry(
 							ItemEntry.builder(CardStock.CARD).apply(CardPackLootFunction.builder(
-									pack.getSet(),
+									pack.set(),
 									bonus.getRarity(),
 									new Pair<>(bonus.getBanner(), bonus.getBannerChance())
 							)).build()

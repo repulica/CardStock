@@ -3,6 +3,7 @@ package repulica.cardstock.client;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
+import net.minecraft.client.render.Shader;
 import net.minecraft.client.render.model.json.JsonUnbakedModel;
 import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.item.DyeableItem;
@@ -14,7 +15,7 @@ import org.quiltmc.qsl.networking.api.client.ClientPlayNetworking;
 import repulica.cardstock.CardStock;
 import repulica.cardstock.api.CardManager;
 import repulica.cardstock.client.model.CardModelGenerator;
-import repulica.cardstock.client.model.DynamicModelVariantProvider;
+import repulica.cardstock.client.render.CardStockRenderLayers;
 import repulica.cardstock.client.screen.CardBinderScreen;
 
 import java.util.Collection;
@@ -33,7 +34,7 @@ public class CardStockClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient(ModContainer container) {
 		HandledScreens.register(CardStock.CARD_BINDER_HANDLER, CardBinderScreen::new);
-		ModelLoadingRegistry.INSTANCE.registerVariantProvider(manager -> new DynamicModelVariantProvider());
+		CardStockRenderLayers.init();
 		ModelLoadingRegistry.INSTANCE.registerModelProvider((manager, consumer) -> {
 			Collection<Identifier> cards = manager.findResources("models/item/card", string -> string.endsWith(".json"));
 			for (Identifier id : cards) {

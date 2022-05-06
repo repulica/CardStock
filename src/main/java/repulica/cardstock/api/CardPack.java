@@ -5,34 +5,7 @@ import net.minecraft.util.Identifier;
 
 import java.util.List;
 
-public class CardPack {
-	private final Identifier set;
-	private final int cardCount;
-	private final Int2IntMap weights;
-	private final List<Bonus> bonuses;
-
-	public CardPack(Identifier set, int cardCount, Int2IntMap weights, List<Bonus> bonuses) {
-		this.set = set;
-		this.cardCount = cardCount;
-		this.weights = weights;
-		this.bonuses = bonuses;
-	}
-
-	public Identifier getSet() {
-		return set;
-	}
-
-	public int getCardCount() {
-		return cardCount;
-	}
-
-	public Int2IntMap getWeights() {
-		return weights;
-	}
-
-	public List<Bonus> getBonuses() {
-		return bonuses;
-	}
+public record CardPack(Identifier set, int cardCount, Int2IntMap weights, List<Bonus> bonuses) {
 
 	public static class Bonus {
 		private final int rarity;

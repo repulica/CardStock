@@ -41,5 +41,8 @@
   ],
   "cardinal-components": [
     "cardstock:card_binder"
+  ],
+  "access_widener": [
+    "cardstock.accessWidener"
   ]
 }

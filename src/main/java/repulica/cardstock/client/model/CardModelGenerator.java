@@ -19,6 +19,7 @@ public class CardModelGenerator {
 	public static final List<String> LAYERS = Lists.newArrayList("layer0", "layer1", "layer2", "layer3", "layer4");
 	private static final float FRONT = 7.75F;
 	private static final float BACK = 8.25F;
+	public static final ModelTransformation ITEM_TRANSFORMATION;
 
 	public JsonUnbakedModel create(Function<SpriteIdentifier, Sprite> textureGetter, JsonUnbakedModel blockModel) {
 		Map<String, Either<SpriteIdentifier, String>> map = Maps.newHashMap();
@@ -37,7 +38,7 @@ public class CardModelGenerator {
 		}
 
 		map.put("particle", blockModel.textureExists("particle") ? Either.left(blockModel.resolveSprite("particle")) : map.get("layer0"));
-		JsonUnbakedModel model = new JsonUnbakedModel(null, list, map, false, blockModel.getGuiLight(), blockModel.getTransformations(), blockModel.getOverrides());
+		JsonUnbakedModel model = new JsonUnbakedModel(null, list, map, false, blockModel.getGuiLight(), ITEM_TRANSFORMATION, blockModel.getOverrides());
 		model.id = blockModel.id;
 		return model;
 	}
@@ -264,6 +265,15 @@ public class CardModelGenerator {
 		private boolean isVertical() {
 			return this == DOWN || this == UP;
 		}
+	}
+
+	static {
+		Transformation ground = new Transformation(new Vec3f(0, 0, 0), new Vec3f(0/16F, 2/16F, 0/16F), new Vec3f(0.5F, 0.5F, 0.5F));
+		Transformation head = new Transformation(new Vec3f(0, 180, 0), new Vec3f(0/16F, 13/16F, 7/16F), new Vec3f(1, 1, 1));
+		Transformation thirdPerson = new Transformation(new Vec3f(0, 0, 0), new Vec3f(0/16F, 3/16F, 1/16F), new Vec3f(0.55F, 0.55F, 0.55F));
+		Transformation firstPerson = new Transformation(new Vec3f(0, -90, 25), new Vec3f(1.13F/16F, 3.2F/16F, 1.13F/16F), new Vec3f(0.68F, 0.68F, 0.68F));
+		Transformation fixed = new Transformation(new Vec3f(0, 180, 1), new Vec3f(0/16F, 0/16F, 0/16F), new Vec3f(1, 1, 1));
+		ITEM_TRANSFORMATION = new ModelTransformation(thirdPerson, thirdPerson, firstPerson, firstPerson, head, Transformation.IDENTITY, ground, fixed);
 	}
 }
 

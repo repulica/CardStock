@@ -34,8 +34,8 @@ public class CardStock implements ModInitializer {
 
 	//todo: non-card group
 	public static final Item CARD = Registry.register(Registry.ITEM, new Identifier(MODID, "card"), new CardItem(new Item.Settings().maxCount(4)));
-	public static final Item CARD_BINDER = Registry.register(Registry.ITEM, new Identifier(MODID, "card_binder"), new CardBinderItem(new Item.Settings().maxCount(1).group(ItemGroup.MISC)));
-	public static final Item ENDER_CARD_BINDER = Registry.register(Registry.ITEM, new Identifier(MODID, "ender_card_binder"), new EnderCardBinderItem(new Item.Settings().maxCount(1).group(ItemGroup.MISC)));
+	public static final Item CARD_BINDER = Registry.register(Registry.ITEM, new Identifier(MODID, "card_binder"), new CardBinderItem(new Item.Settings().maxCount(1)));
+	public static final Item ENDER_CARD_BINDER = Registry.register(Registry.ITEM, new Identifier(MODID, "ender_card_binder"), new EnderCardBinderItem(new Item.Settings().maxCount(1)));
 	public static final Item CARD_PACK = Registry.register(Registry.ITEM, new Identifier(MODID, "card_pack"), new CardPackItem(new Item.Settings().maxCount(1))); //todo: should this go in a group at all
 
 	public static ScreenHandlerType<GenericContainerScreenHandler> CARD_BINDER_HANDLER;

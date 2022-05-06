@@ -10,6 +10,8 @@
     "MixinHandledScreen",
     "MixinItemRenderer",
     "MixinJsonUnbakedModel",
-    "MixinModelLoader"
+    "MixinModelLoader",
+    "MixinGameRenderer",
+    "MixinItemModels"
   ]
 }

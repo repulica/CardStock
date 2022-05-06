@@ -31,10 +31,10 @@ public class CardItem extends Item {
 		return CardManager.INSTANCE.getCard(stack).getItemRarity();
 	}
 
-	@Override
-	public boolean hasGlint(ItemStack stack) {
-		return CardManager.INSTANCE.getCard(stack).getRarity() == 5;
-	}
+//	@Override
+//	public boolean hasGlint(ItemStack stack) {
+//		return CardManager.INSTANCE.getCard(stack).getRarity() == 5;
+//	}
 
 	@Override
 	public Text getName(ItemStack stack) {
@@ -52,13 +52,13 @@ public class CardItem extends Item {
 		super.appendTooltip(stack, world, tooltip, context);
 		tooltip.add(new LiteralText(""));
 		Card card = CardManager.INSTANCE.getCard(stack);
-		if (!card.toString().equals("")) tooltip.add(card.getInfo());
+		if (!card.toString().equals("")) tooltip.add(card.info());
 		if (Screen.hasShiftDown()) {
-			for (Text line : card.getLore()) {
+			for (Text line : card.lore()) {
 				tooltip.add(new LiteralText("  ").append(line));
 			}
-			if (card.getArtist() != null) {
-				tooltip.add(new TranslatableText("text.cardstock.artist", card.getArtist(), card.getDate()).formatted(Formatting.GRAY));
+			if (card.artist() != null) {
+				tooltip.add(new TranslatableText("text.cardstock.artist", card.artist(), card.date()).formatted(Formatting.GRAY));
 			}
 		} else {
 			tooltip.add(new TranslatableText("text.cardstock.more").formatted(Formatting.GRAY));

@@ -40,13 +40,13 @@ public class CardTooltipComponent implements TooltipComponent, ConvertibleToolti
 
 	@Override
 	public void drawItems(TextRenderer textRenderer, int x, int y, MatrixStack matrices, ItemRenderer itemRenderer, int z) {
-		if (CardManager.INSTANCE.getCard(stack).getRarity() != 0) {
+		if (CardManager.INSTANCE.getCard(stack).rarity() != 0) {
 			RenderSystem.setShaderTexture(0, STAR_ID);
-			for (int i = 0; i < CardManager.INSTANCE.getCard(stack).getRarity(); i++) {
+			for (int i = 0; i < CardManager.INSTANCE.getCard(stack).rarity(); i++) {
 				DrawableHelper.drawTexture(matrices, x + i * 10, y, z, 0, 0, 9, 9, 9, 9);
 			}
 			RenderSystem.setShaderTexture(0, EMPTY_STAR_ID);
-			for (int i = CardManager.INSTANCE.getCard(stack).getRarity(); i < 5; i++) {
+			for (int i = CardManager.INSTANCE.getCard(stack).rarity(); i < 5; i++) {
 				DrawableHelper.drawTexture(matrices, x + i * 10, y, z, 0, 0, 9, 9, 9, 9);
 			}
 			RenderSystem.setShaderTexture(0, CardManager.INSTANCE.getSet(stack).getEmblem());
