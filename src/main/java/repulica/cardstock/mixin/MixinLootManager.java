@@ -13,6 +13,7 @@ import net.fabricmc.fabric.api.loot.v1.FabricLootPoolBuilder;
 import net.minecraft.loot.*;
 import net.minecraft.loot.entry.ItemEntry;
 import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
+import net.minecraft.resource.Resource;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Pair;
@@ -42,9 +43,9 @@ public class MixinLootManager {
 	private void injectCardPackTables(Map<Identifier, JsonElement> jsons, ResourceManager manager, Profiler profiler, CallbackInfo info, ImmutableMap.Builder<Identifier, LootTable> tableMap) {
 		Collection<Identifier> ids = manager.findResources("cardstock/packs", path -> path.endsWith(".kdl"));
 		for (Identifier id : ids) {
-			try {
-				Identifier tableId = new Identifier(id.getNamespace(), id.getPath().substring(PREFIX_LENGTH, id.getPath().length() - SUFFIX_LENGTH));
-				KDLDocument doc = PARSER.parse(manager.method_14486(id).getInputStream());
+			Identifier tableId = new Identifier(id.getNamespace(), id.getPath().substring(PREFIX_LENGTH, id.getPath().length() - SUFFIX_LENGTH));
+			try (Resource res = manager.method_14486(id)){
+				KDLDocument doc = PARSER.parse(res.getInputStream());
 				CardPack pack = parsePackDoc(tableId, doc);
 				int bonuses = 0;
 				for (CardPack.Bonus bonus : pack.bonuses()) {

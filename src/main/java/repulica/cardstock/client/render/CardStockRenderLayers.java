@@ -1,18 +1,17 @@
 package repulica.cardstock.client.render;
 
-import com.google.common.collect.ImmutableMap;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.render.*;
-import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Vec3f;
 import repulica.cardstock.CardStock;
-import repulica.cardstock.client.CardStockClient;
+
+import java.util.Map;
 
 public class CardStockRenderLayers extends RenderLayer {
-	public static VertexConsumerProvider.Immediate CONSUMER;
+	private static VertexConsumerProvider.Immediate CONSUMER;
 	protected static final Identifier CARD_GLITTER_TEXTURE = new Identifier(CardStock.MODID, "textures/misc/card_glitter.png");
 	protected static final Texturing CARD_GLITTER_TEXTURING = new Texturing("card_glitter_texturing", () -> setupCardGlitterTexturing(8.0F), RenderSystem::resetTextureMatrix);
 	public static final RenderLayer CARD_GLITTER = RenderLayer.of(
@@ -46,7 +45,11 @@ public class CardStockRenderLayers extends RenderLayer {
 		RenderSystem.setTextureMatrix(matrix4f);
 	}
 
+	public static VertexConsumerProvider.Immediate getConsumer() {
+		return CONSUMER;
+	}
+
 	public static void init() {
-		CONSUMER = VertexConsumerProvider.immediate(ImmutableMap.of(CARD_GLITTER, new BufferBuilder(256)), new BufferBuilder(256));
+		CONSUMER = VertexConsumerProvider.immediate(Map.of(CARD_GLITTER, new BufferBuilder(256)), new BufferBuilder(256));
 	}
 }

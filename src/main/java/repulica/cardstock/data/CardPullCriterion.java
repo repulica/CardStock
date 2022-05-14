@@ -40,6 +40,5 @@ public class CardPullCriterion extends AbstractCriterion<CardPullCriterion.Condi
 			this.card = card;
 		}
 
-
 	}
 }

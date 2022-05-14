@@ -48,9 +48,9 @@ public abstract class MixinItemRenderer {
 //	private void renderFoil(ItemStack stack, ModelTransformation.Mode renderMode, boolean leftHanded, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, BakedModel model, CallbackInfo info) {
 //		if (stack.getItem() == CardStock.CARD) {
 //			Card card = CardManager.INSTANCE.getCard(stack);
-//			if (card.getRarity() == 5) {
+//			if (card.rarity() == 5) {
 //				RenderLayer renderLayer = CardStockRenderLayers.CARD_GLITTER;
-//				VertexConsumer consumer = CardStockRenderLayers.CONSUMER.getBuffer(renderLayer);
+//				VertexConsumer consumer = CardStockRenderLayers.getConsumer().getBuffer(renderLayer);
 //				this.renderBakedItemModel(model, stack, light, overlay, matrices, consumer);
 //				matrices.pop();
 //				info.cancel();
@@ -60,7 +60,7 @@ public abstract class MixinItemRenderer {
 
 	@Inject(at=@At(value="INVOKE", target="net/minecraft/client/render/VertexConsumerProvider$Immediate.draw()V", shift=At.Shift.AFTER), method="renderGuiItemModel")
 	protected void renderGuiItemModel(ItemStack stack, int x, int y, BakedModel model, CallbackInfo ci) {
-		CardStockRenderLayers.CONSUMER.draw(CardStockRenderLayers.CARD_GLITTER);
+		CardStockRenderLayers.getConsumer().draw();
 	}
 
 }

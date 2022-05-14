@@ -17,6 +17,7 @@ import repulica.cardstock.api.CardManager;
 import repulica.cardstock.client.model.CardModelGenerator;
 import repulica.cardstock.client.render.CardStockRenderLayers;
 import repulica.cardstock.client.screen.CardBinderScreen;
+import repulica.cardstock.data.CardManagerImpl;
 
 import java.util.Collection;
 
@@ -45,7 +46,7 @@ public class CardStockClient implements ClientModInitializer {
 				consumer.accept(new ModelIdentifier(new Identifier(id.getNamespace(), id.getPath().substring(START, id.getPath().length() - JSON_END)), "inventory"));
 			}
 		});
-		ClientPlayNetworking.registerGlobalReceiver(CardStock.CARD_SYNC, (server, handler, buf, responseSender) -> CardManager.INSTANCE.recievePacket(buf));
+		ClientPlayNetworking.registerGlobalReceiver(CardStock.CARD_SYNC, (server, handler, buf, responseSender) -> CardManagerImpl.INSTANCE.recievePacket(buf));
 		ColorProviderRegistry.ITEM.register(new CardColorProvider(), CardStock.CARD);
 		ColorProviderRegistry.ITEM.register((stack, tintIndex) -> tintIndex == 0? ((DyeableItem) stack.getItem()).getColor(stack) : 0xFFFFFF, CardStock.CARD_BINDER);
 	}

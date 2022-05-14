@@ -1,0 +1,7 @@
+{
+  "parent": "cardstock:item/card",
+  "textures": {
+    "layer0": "cardstock:item/card_missingno",
+    "layer1": "cardstock:item/frame_outcrop"
+  }
+}

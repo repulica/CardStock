@@ -20,6 +20,7 @@ import org.quiltmc.qsl.resource.loader.api.ResourceLoader;
 import org.quiltmc.qsl.resource.loader.api.ResourcePackActivationType;
 import repulica.cardstock.api.CardManager;
 import repulica.cardstock.component.CardBinderInventory;
+import repulica.cardstock.data.CardManagerImpl;
 import repulica.cardstock.data.CardPackLootFunction;
 import repulica.cardstock.data.CardPullCriterion;
 import repulica.cardstock.item.CardBinderItem;
@@ -45,7 +46,7 @@ public class CardStock implements ModInitializer {
 	//todo: possible to be random card?
 	public static final ItemGroup CARDS_GROUP = QuiltItemGroup.builder(new Identifier(MODID, "cards"))
 			.icon(() -> new ItemStack(CARD_BINDER))
-			.appendItems(CardManager.INSTANCE::appendCards)
+			.appendItems(CardManagerImpl.INSTANCE::appendCards)
 			.build();
 
 	@Override
@@ -53,7 +54,7 @@ public class CardStock implements ModInitializer {
 		CARD_BINDER_HANDLER = Registry.register(Registry.SCREEN_HANDLER, new Identifier(MODID), new ScreenHandlerType<>((syncid, inv) -> new GenericContainerScreenHandler(CARD_BINDER_HANDLER, syncid, inv, new CardBinderInventory(), 6)));
 		ResourceLoader.get(ResourceType.SERVER_DATA).registerReloader(CardManager.INSTANCE);
 		Registry.register(Registry.LOOT_FUNCTION_TYPE, new Identifier(MODID, "card_pack"), CardPackLootFunction.TYPE);
-		ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> sender.sendPacket(CARD_SYNC, CardManager.INSTANCE.getBuf()));
+		ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> sender.sendPacket(CARD_SYNC, CardManagerImpl.INSTANCE.getBuf()));
 		QuiltLoader.getModContainer(MODID).ifPresent(modContainer -> ResourceLoader.registerBuiltinResourcePack(new Identifier(MODID, "retromc"), modContainer, ResourcePackActivationType.NORMAL));
 	}
 

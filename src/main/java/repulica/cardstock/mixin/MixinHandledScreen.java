@@ -32,12 +32,25 @@ public abstract class MixinHandledScreen extends Screen {
 
 	@Inject(method = "drawSlotHighlight", at = @At("HEAD"), cancellable = true)
 	private static void hookSmallCardDraw(MatrixStack matrices, int x, int y, int z, CallbackInfo info) {
-		if (CALLING_SCREEN.get() instanceof CardBinderScreen && SLOT_LOCAL.get().inventory instanceof CardBinderInventory) {
+		if (CALLING_SCREEN.get() instanceof CardBinderScreen sc && SLOT_LOCAL.get().inventory instanceof CardBinderInventory) {
 			RenderSystem.disableDepthTest();
 			RenderSystem.colorMask(true, true, true, false);
-			fillGradient(matrices, x+4, y+1, x+12, y+2, FILL_COLOR, FILL_COLOR, z);
-			fillGradient(matrices, x+3, y+2, x+13, y+14, FILL_COLOR, FILL_COLOR, z);
-			fillGradient(matrices, x+4, y+14, x+12, y+15, FILL_COLOR, FILL_COLOR, z);
+			fillGradient(matrices, x+3, y, x+13, y+1, FILL_COLOR, FILL_COLOR, z);
+			fillGradient(matrices, x+2, y+1, x+14, y+2, FILL_COLOR, FILL_COLOR, z);
+			if (!sc.isSussy) {
+				fillGradient(matrices, x+1, y+2, x+15, y+14, FILL_COLOR, FILL_COLOR, z);
+				fillGradient(matrices, x+2, y+14, x+14, y+15, FILL_COLOR, FILL_COLOR, z);
+				fillGradient(matrices, x+3, y+15, x+13, y+16, FILL_COLOR, FILL_COLOR, z);
+			} else {
+				//highlight to fit among us texture
+				fillGradient(matrices, x+1, y+2, x+15, y+13, FILL_COLOR, FILL_COLOR, z);
+				fillGradient(matrices, x+1, y+13, x+6, y+14, FILL_COLOR, FILL_COLOR, z);
+				fillGradient(matrices, x+10, y+13, x+15, y+14, FILL_COLOR, FILL_COLOR, z);
+				fillGradient(matrices, x+2, y+14, x+5, y+15, FILL_COLOR, FILL_COLOR, z);
+				fillGradient(matrices, x+11, y+14, x+14, y+15, FILL_COLOR, FILL_COLOR, z);
+				fillGradient(matrices, x+3, y+15, x+5, y+16, FILL_COLOR, FILL_COLOR, z);
+				fillGradient(matrices, x+11, y+15, x+13, y+16, FILL_COLOR, FILL_COLOR, z);
+			}
 			RenderSystem.colorMask(true, true, true, true);
 			RenderSystem.enableDepthTest();
 			info.cancel();

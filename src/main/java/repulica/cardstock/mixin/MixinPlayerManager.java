@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import repulica.cardstock.api.CardManager;
+import repulica.cardstock.data.CardManagerImpl;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ public class MixinPlayerManager {
 	@Inject(method = "onDataPacksReloaded", at = @At("TAIL"))
 	private void sendCardPacket(CallbackInfo info) {
 		for (ServerPlayerEntity player : this.players) {
-			CardManager.INSTANCE.sendPacket(player);
+			CardManagerImpl.INSTANCE.sendPacket(player);
 		}
 	}
 }
