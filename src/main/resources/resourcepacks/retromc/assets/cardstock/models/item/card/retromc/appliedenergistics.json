@@ -1,6 +1,6 @@
 {
   "parent": "cardstock:item/reverse_holofoil_card",
   "textures": {
-    "layer0": "cardstock:item/card_missingno"
+    "art": "cardstock:item/card_missingno"
   }
 }

@@ -9,13 +9,19 @@ import net.minecraft.util.math.MathHelper;
 //courtesy of unascribed in yttr
 //used with permission and under compatible license
 public class CardColorProvider implements ItemColorProvider {
+	private static final int LAYER_ART = 0;
+	private static final int LAYER_FRAME = 1;
+	private static final int LAYER_HOLO_CENTER = 2;
+	private static final int LAYER_HOLO_LEFT = 3;
+	private static final int LAYER_HOLO_RIGHT = 4;
+	private static final int LAYER_EXTRA = 5;
 
 	public static float holderYaw = 0;
 	public static boolean holderYawValid = false;
 
 	@Override
-	public int getColor(ItemStack stack, int tintIndex) {
-		if (tintIndex == 0) return -1;
+	public int getColor(ItemStack stack, int layer) {
+		if (layer == LAYER_ART || layer == LAYER_FRAME || layer == LAYER_EXTRA) return -1;
 		float yaw;
 		if (holderYawValid) {
 			yaw = holderYaw;
@@ -53,10 +59,10 @@ public class CardColorProvider implements ItemColorProvider {
 			yaw = 0;
 		}
 		yaw = MathHelper.wrapDegrees(yaw)+180;
-		if (tintIndex == 1) {
-			yaw -= 100;
-		} else if (tintIndex == 2) {
-			yaw += 100;
+		if (layer == LAYER_HOLO_LEFT) {
+			yaw -= 120;
+		} else if (layer == LAYER_HOLO_RIGHT) {
+			yaw += 120;
 		}
 		yaw += (Math.abs(stack.hashCode()) / 2000f) % 360;
 		float hue = (yaw % 360) / 360f;

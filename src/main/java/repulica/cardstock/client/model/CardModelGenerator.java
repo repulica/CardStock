@@ -6,7 +6,6 @@ import com.mojang.datafixers.util.Either;
 import net.minecraft.client.render.model.json.*;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.SpriteIdentifier;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3f;
 
@@ -14,32 +13,32 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-//alternate version of ItemModelGenerator that makes them half as thick
+//alternate version of ItemModelGenerator that makes them half as thick and gives better names for texture layers
 public class CardModelGenerator {
-	public static final List<String> LAYERS = Lists.newArrayList("layer0", "layer1", "layer2", "layer3", "layer4");
+	public static final List<String> LAYERS = Lists.newArrayList("art", "frame", "holo_center", "holo_left", "holo_right", "extra");
 	private static final float FRONT = 7.75F;
 	private static final float BACK = 8.25F;
 	public static final ModelTransformation ITEM_TRANSFORMATION;
 
-	public JsonUnbakedModel create(Function<SpriteIdentifier, Sprite> textureGetter, JsonUnbakedModel blockModel) {
+	public JsonUnbakedModel create(Function<SpriteIdentifier, Sprite> textureGetter, JsonUnbakedModel baseModel) {
 		Map<String, Either<SpriteIdentifier, String>> map = Maps.newHashMap();
 		List<ModelElement> list = Lists.newArrayList();
 
 		for(int i = 0; i < LAYERS.size(); i++) {
 			String string = LAYERS.get(i);
-			if (!blockModel.textureExists(string)) {
-				break;
+			if (!baseModel.textureExists(string)) {
+				continue;
 			}
 
-			SpriteIdentifier spriteIdentifier = blockModel.resolveSprite(string);
+			SpriteIdentifier spriteIdentifier = baseModel.resolveSprite(string);
 			map.put(string, Either.left(spriteIdentifier));
 			Sprite sprite = textureGetter.apply(spriteIdentifier);
 			list.addAll(this.addLayerElements(i, string, sprite));
 		}
 
-		map.put("particle", blockModel.textureExists("particle") ? Either.left(blockModel.resolveSprite("particle")) : map.get("layer0"));
-		JsonUnbakedModel model = new JsonUnbakedModel(null, list, map, false, blockModel.getGuiLight(), ITEM_TRANSFORMATION, blockModel.getOverrides());
-		model.id = blockModel.id;
+		map.put("particle", baseModel.textureExists("particle") ? Either.left(baseModel.resolveSprite("particle")) : map.get("art"));
+		JsonUnbakedModel model = new JsonUnbakedModel(null, list, map, false, baseModel.getGuiLight(), ITEM_TRANSFORMATION, baseModel.getOverrides());
+		model.id = baseModel.id;
 		return model;
 	}
 
@@ -73,8 +72,8 @@ public class CardModelGenerator {
 			float max = (float)frame.getMax();
 			float level = (float)frame.getLevel();
 			Side side = frame.getSide();
-			switch(side) {
-				case UP:
+			switch (side) {
+				case UP -> {
 					u1 = min;
 					x1 = min;
 					x2 = u2 = max + 1.0F;
@@ -82,8 +81,8 @@ public class CardModelGenerator {
 					y1 = level;
 					y2 = level;
 					v2 = level + 1.0F;
-					break;
-				case DOWN:
+				}
+				case DOWN -> {
 					v1 = level;
 					v2 = level + 1.0F;
 					u1 = min;
@@ -91,8 +90,8 @@ public class CardModelGenerator {
 					x2 = u2 = max + 1.0F;
 					y1 = level + 1.0F;
 					y2 = level + 1.0F;
-					break;
-				case LEFT:
+				}
+				case LEFT -> {
 					u1 = level;
 					x1 = level;
 					x2 = level;
@@ -100,8 +99,8 @@ public class CardModelGenerator {
 					v2 = min;
 					y1 = min;
 					y2 = v1 = max + 1.0F;
-					break;
-				case RIGHT:
+				}
+				case RIGHT -> {
 					u1 = level;
 					u2 = level + 1.0F;
 					x1 = level + 1.0F;
@@ -109,6 +108,7 @@ public class CardModelGenerator {
 					v2 = min;
 					y1 = min;
 					y2 = v1 = max + 1.0F;
+				}
 			}
 
 			x1 *= frameWidth;
@@ -123,18 +123,15 @@ public class CardModelGenerator {
 			v2 *= frameHeight;
 			Map<Direction, ModelElementFace> map = Maps.newHashMap();
 			map.put(side.getDirection(), new ModelElementFace(null, layer, key, new ModelElementTexture(new float[]{u1, v1, u2, v2}, 0)));
-			switch(side) {
-				case UP:
-					list.add(new ModelElement(new Vec3f(x1, y1, FRONT), new Vec3f(x2, y1, BACK), map, null, true));
-					break;
-				case DOWN:
-					list.add(new ModelElement(new Vec3f(x1, y2, FRONT), new Vec3f(x2, y2, BACK), map, null, true));
-					break;
-				case LEFT:
-					list.add(new ModelElement(new Vec3f(x1, y1, FRONT), new Vec3f(x1, y2, BACK), map, null, true));
-					break;
-				case RIGHT:
-					list.add(new ModelElement(new Vec3f(x2, y1, FRONT), new Vec3f(x2, y2, BACK), map, null, true));
+			switch (side) {
+				case UP ->
+						list.add(new ModelElement(new Vec3f(x1, y1, FRONT), new Vec3f(x2, y1, BACK), map, null, true));
+				case DOWN ->
+						list.add(new ModelElement(new Vec3f(x1, y2, FRONT), new Vec3f(x2, y2, BACK), map, null, true));
+				case LEFT ->
+						list.add(new ModelElement(new Vec3f(x1, y1, FRONT), new Vec3f(x1, y2, BACK), map, null, true));
+				case RIGHT ->
+						list.add(new ModelElement(new Vec3f(x2, y1, FRONT), new Vec3f(x2, y2, BACK), map, null, true));
 			}
 		}
 
