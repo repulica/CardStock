@@ -30,10 +30,11 @@ import java.io.IOException;
 import java.util.*;
 
 public class CardManagerImpl implements CardManager {
-	public static final CardManagerImpl INSTANCE = new CardManagerImpl();
+	private static final Identifier RAINBOW_ID = new Identifier(CardStock.MODID, "rainbow");
 	private static final KDLParser PARSER = new KDLParser();
 	private static final String PREFIX = "cardstock/sets";
 	private static final int SUFFIX_LENGTH = ".kdl".length();
+	public static final CardManagerImpl INSTANCE = new CardManagerImpl();
 
 	private final Map<Identifier, CardSet> sets = new HashMap<>();
 
@@ -41,7 +42,7 @@ public class CardManagerImpl implements CardManager {
 	private final CardSet defaultMissingnoSet;
 
 	public CardManagerImpl() {
-		this.defaultMissingno = new Card(1, new TranslatableText("text.cardstock.missingno"), new ArrayList<>(), "BluKat", "2021");
+		this.defaultMissingno = new Card(1, new TranslatableText("text.cardstock.missingno"), new ArrayList<>(), "BluKat", "2021", RAINBOW_ID);
 		Map<String, Card> setMap = new HashMap<>();
 		setMap.put("missingno", defaultMissingno);
 		this.defaultMissingnoSet = new CardSet(new Identifier(CardStock.MODID, "textures/gui/missingno.png"), setMap);
@@ -155,11 +156,14 @@ public class CardManagerImpl implements CardManager {
 			Identifier setId = new Identifier(id.getNamespace(), id.getPath().substring(PREFIX.length() + 1, id.getPath().length() - SUFFIX_LENGTH));
 			try (Resource res = manager.method_14486(id)) {
 				KDLDocument doc = PARSER.parse(res.getInputStream());
-				Identifier emblem = new Identifier(CardStock.MODID, "textures/gui/missingno.png");
+				Identifier emblem = new Identifier(id.getNamespace(), "textures/cardstock/emblem/" + setId.getPath() + ".png");
+				Identifier holofoil = RAINBOW_ID;
 				Map<String, Card> parsedCards = new HashMap<>();
 				for (KDLNode node : doc.getNodes()) {
 					if (node.getIdentifier().equals("emblem")) {
 						emblem = new Identifier(node.getArgs().get(0).getAsString().getValue());
+					} else if (node.getIdentifier().equals("holofoil")) {
+						holofoil = new Identifier(node.getArgs().get(0).getAsString().getValue());
 					} else if (node.getIdentifier().equals("card")) {
 						String name = node.getArgs().get(0).getAsString().getValue();
 						int rarity = 0;
@@ -191,7 +195,7 @@ public class CardManagerImpl implements CardManager {
 								}
 							}
 						}
-						parsedCards.put(name, new Card(rarity, info, lore, artist, date));
+						parsedCards.put(name, new Card(rarity, info, lore, artist, date, holofoil));
 						cardCount++;
 					}
 				}
@@ -288,9 +292,17 @@ public class CardManagerImpl implements CardManager {
 	public void appendCards(List<ItemStack> toDisplay) {
 		toDisplay.add(new ItemStack(CardStock.CARD_BINDER));
 		toDisplay.add(new ItemStack(CardStock.ENDER_CARD_BINDER));
-		for (Identifier id : sets.keySet()) {
+		List<Identifier> setKeys = new ArrayList<>(sets.keySet());
+		setKeys.sort(Comparator.naturalOrder());
+		for (Identifier id : setKeys) {
 			CardSet set = sets.get(id);
-			for (String name : set.getCards().keySet()) {
+			List<Map.Entry<String, Card>> cards = new ArrayList<>(set.getCards().entrySet());
+			//weird type coercion issues happen without splitting this for some reason
+			Comparator<Map.Entry<String, Card>> halfComp = Comparator.comparingInt(e -> e.getValue().rarity());
+			Comparator<Map.Entry<String, Card>> fullComp = halfComp.reversed().thenComparing(Map.Entry::getKey);
+			cards.sort(fullComp);
+			for (Map.Entry<String, Card> entry : cards) {
+				String name = entry.getKey();
 				Identifier cardId = new Identifier(id.getNamespace(), id.getPath() + '/' + name);
 				ItemStack cardStack = new ItemStack(CardStock.CARD);
 				cardStack.getOrCreateNbt().putString("Card", cardId.toString());
@@ -319,6 +331,7 @@ public class CardManagerImpl implements CardManager {
 				for (Text line : card.lore()) {
 					buf.writeText(line); //line of lore
 				}
+				buf.writeIdentifier(card.holofoil()); //holofoil type id
 			}
 		}
 		return buf;
@@ -348,7 +361,8 @@ public class CardManagerImpl implements CardManager {
 				for (int k = 0; k < loreCount; k++) {
 					lore.add(buf.readText());
 				}
-				cards.put(name, new Card(rarity, info, lore, artist, date));
+				Identifier holofoil = buf.readIdentifier();
+				cards.put(name, new Card(rarity, info, lore, artist, date, holofoil));
 			}
 			sets.put(id, new CardSet(emblem, cards));
 		}

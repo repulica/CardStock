@@ -5,8 +5,12 @@ import net.minecraft.client.color.item.ItemColorProvider;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
+import repulica.cardstock.api.Card;
+import repulica.cardstock.api.CardManager;
+import repulica.cardstock.api.Holofoil;
 
 //courtesy of unascribed in yttr
+//adapted for cardstock style
 //used with permission and under compatible license
 public class CardColorProvider implements ItemColorProvider {
 	private static final int LAYER_ART = 0;
@@ -22,6 +26,7 @@ public class CardColorProvider implements ItemColorProvider {
 	@Override
 	public int getColor(ItemStack stack, int layer) {
 		if (layer == LAYER_ART || layer == LAYER_FRAME || layer == LAYER_EXTRA) return -1;
+		Holofoil foil = Holofoil.FOILS.getOrDefault(CardManager.INSTANCE.getCard(stack).holofoil(), CardStockClient.RAINBOW_FOIL);
 		float yaw;
 		if (holderYawValid) {
 			yaw = holderYaw;
@@ -65,9 +70,7 @@ public class CardColorProvider implements ItemColorProvider {
 			yaw += 120;
 		}
 		yaw += (Math.abs(stack.hashCode()) / 2000f) % 360;
-		float hue = (yaw % 360) / 360f;
-		if (hue < 0) hue += 1;
-		return MathHelper.hsvToRgb(hue, 0.5f, 1.0f);
+		return foil.getFoilColor(yaw);
 	}
 
 }

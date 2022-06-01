@@ -269,7 +269,7 @@ public class CardModelGenerator {
 		Transformation head = new Transformation(new Vec3f(0, 180, 0), new Vec3f(0/16F, 13/16F, 7/16F), new Vec3f(1, 1, 1));
 		Transformation thirdPerson = new Transformation(new Vec3f(0, 0, 0), new Vec3f(0/16F, 3/16F, 1/16F), new Vec3f(0.55F, 0.55F, 0.55F));
 		Transformation firstPerson = new Transformation(new Vec3f(0, -90, 25), new Vec3f(1.13F/16F, 3.2F/16F, 1.13F/16F), new Vec3f(0.68F, 0.68F, 0.68F));
-		Transformation fixed = new Transformation(new Vec3f(0, 180, 1), new Vec3f(0/16F, 0/16F, 0/16F), new Vec3f(1, 1, 1));
+		Transformation fixed = new Transformation(new Vec3f(0, 180, 0), new Vec3f(0/16F, 0/16F, 0/16F), new Vec3f(1, 1, 1));
 		ITEM_TRANSFORMATION = new ModelTransformation(thirdPerson, thirdPerson, firstPerson, firstPerson, head, Transformation.IDENTITY, ground, fixed);
 	}
 }
