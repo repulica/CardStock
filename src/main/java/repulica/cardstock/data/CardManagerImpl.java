@@ -61,8 +61,10 @@ public class CardManagerImpl implements CardManager {
 
 	@Override
 	public Card getCard(Identifier id) {
-		Identifier setId = new Identifier(id.getNamespace(), id.getPath().substring(0, id.getPath().lastIndexOf('/')));
-		String cardId = id.getPath().substring(id.getPath().lastIndexOf('/') + 1);
+		int slashIndex = id.getPath().lastIndexOf('/');
+		if (slashIndex == -1 || slashIndex + 1 == id.getPath().length() ) return getDefaultMissingno();
+		Identifier setId = new Identifier(id.getNamespace(), id.getPath().substring(0, slashIndex));
+		String cardId = id.getPath().substring(slashIndex + 1);
 		return getSet(setId).getCard(cardId);
 	}
 
@@ -70,7 +72,9 @@ public class CardManagerImpl implements CardManager {
 	public CardSet getSet(ItemStack stack) {
 		if (stack.hasNbt() && stack.getNbt().contains("Card", NbtElement.STRING_TYPE)) {
 			String cardName = stack.getNbt().getString("Card");
-			return getSet(new Identifier(cardName.substring(0, cardName.lastIndexOf('/'))));
+			int slashIndex = cardName.lastIndexOf('/');
+			if (slashIndex == -1) return getDefaultMissingnoSet();
+			return getSet(new Identifier(cardName.substring(0, slashIndex)));
 		}
 		return defaultMissingnoSet;
 	}
@@ -157,14 +161,12 @@ public class CardManagerImpl implements CardManager {
 			try (Resource res = manager.method_14486(id)) {
 				KDLDocument doc = PARSER.parse(res.getInputStream());
 				Identifier emblem = new Identifier(id.getNamespace(), "textures/cardstock/emblem/" + setId.getPath() + ".png");
-				Identifier holofoil = RAINBOW_ID;
 				Map<String, Card> parsedCards = new HashMap<>();
 				for (KDLNode node : doc.getNodes()) {
 					if (node.getIdentifier().equals("emblem")) {
 						emblem = new Identifier(node.getArgs().get(0).getAsString().getValue());
-					} else if (node.getIdentifier().equals("holofoil")) {
-						holofoil = new Identifier(node.getArgs().get(0).getAsString().getValue());
 					} else if (node.getIdentifier().equals("card")) {
+						Identifier holofoil = RAINBOW_ID;
 						String name = node.getArgs().get(0).getAsString().getValue();
 						int rarity = 0;
 						Text info = new LiteralText("");
@@ -191,6 +193,9 @@ public class CardManagerImpl implements CardManager {
 										break;
 									case "date":
 										date = child.getArgs().get(0).getAsString().getValue();
+										break;
+									case "holofoil":
+										holofoil = new Identifier(node.getArgs().get(0).getAsString().getValue());
 										break;
 								}
 							}
