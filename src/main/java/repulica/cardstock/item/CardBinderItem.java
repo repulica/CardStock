@@ -16,6 +16,7 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import repulica.cardstock.CardStock;
 import repulica.cardstock.component.CardStockComponents;
+import repulica.cardstock.screen.CardBinderScreenHandler;
 
 public class CardBinderItem extends Item implements DyeableItem {
 	public CardBinderItem(Settings settings) {
@@ -47,7 +48,7 @@ public class CardBinderItem extends Item implements DyeableItem {
 		@Nullable
 		@Override
 		public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-			return new GenericContainerScreenHandler(CardStock.CARD_BINDER_HANDLER, syncId, inv, CardStockComponents.CARD_BINDER.get(stack).getInv(), 6);
+			return new CardBinderScreenHandler(stack, CardStock.CARD_BINDER_HANDLER, syncId, inv, CardStockComponents.CARD_BINDER.get(stack).getInv(), 6);
 		}
 	}
 }

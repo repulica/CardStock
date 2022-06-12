@@ -27,6 +27,7 @@ import repulica.cardstock.item.CardBinderItem;
 import repulica.cardstock.item.CardItem;
 import repulica.cardstock.item.CardPackItem;
 import repulica.cardstock.item.EnderCardBinderItem;
+import repulica.cardstock.screen.CardBinderScreenHandler;
 
 public class CardStock implements ModInitializer {
 	public static final String MODID = "cardstock";
@@ -39,7 +40,7 @@ public class CardStock implements ModInitializer {
 	public static final Item ENDER_CARD_BINDER = Registry.register(Registry.ITEM, new Identifier(MODID, "ender_card_binder"), new EnderCardBinderItem(new Item.Settings().maxCount(1)));
 	public static final Item CARD_PACK = Registry.register(Registry.ITEM, new Identifier(MODID, "card_pack"), new CardPackItem(new Item.Settings().maxCount(1))); //todo: should this go in a group at all
 
-	public static ScreenHandlerType<GenericContainerScreenHandler> CARD_BINDER_HANDLER;
+	public static ScreenHandlerType<CardBinderScreenHandler> CARD_BINDER_HANDLER;
 
 	public static final CardPullCriterion CARD_PULL = Criteria.register(new CardPullCriterion());
 
@@ -51,7 +52,7 @@ public class CardStock implements ModInitializer {
 
 	@Override
 	public void onInitialize(ModContainer container) {
-		CARD_BINDER_HANDLER = Registry.register(Registry.SCREEN_HANDLER, new Identifier(MODID), new ScreenHandlerType<>((syncid, inv) -> new GenericContainerScreenHandler(CARD_BINDER_HANDLER, syncid, inv, new CardBinderInventory(), 6)));
+		CARD_BINDER_HANDLER = Registry.register(Registry.SCREEN_HANDLER, new Identifier(MODID), new ScreenHandlerType<>((syncid, inv) -> new CardBinderScreenHandler(CARD_BINDER_HANDLER, syncid, inv, new CardBinderInventory(), 6)));
 		ResourceLoader.get(ResourceType.SERVER_DATA).registerReloader(CardManager.INSTANCE);
 		Registry.register(Registry.LOOT_FUNCTION_TYPE, new Identifier(MODID, "card_pack"), CardPackLootFunction.TYPE);
 		ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> sender.sendPacket(CARD_SYNC, CardManagerImpl.INSTANCE.getBuf()));

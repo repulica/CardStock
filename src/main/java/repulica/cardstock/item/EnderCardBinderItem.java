@@ -15,6 +15,7 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import repulica.cardstock.CardStock;
 import repulica.cardstock.component.CardStockComponents;
+import repulica.cardstock.screen.CardBinderScreenHandler;
 
 public class EnderCardBinderItem extends Item {
 	public EnderCardBinderItem(Settings settings) {
@@ -25,13 +26,18 @@ public class EnderCardBinderItem extends Item {
 	public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
 		if (!world.isClient) {
 			ItemStack stack = user.getStackInHand(hand);
-			user.openHandledScreen(new BinderFactory());
+			user.openHandledScreen(new BinderFactory(stack));
 			return TypedActionResult.success(stack);
 		}
 		return super.use(world, user, hand);
 	}
 
 	public static class BinderFactory implements NamedScreenHandlerFactory {
+		private final ItemStack stack;
+
+		public BinderFactory(ItemStack stack) {
+			this.stack = stack;
+		}
 
 		@Override
 		public Text getDisplayName() {
@@ -41,7 +47,7 @@ public class EnderCardBinderItem extends Item {
 		@Nullable
 		@Override
 		public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-			return new GenericContainerScreenHandler(CardStock.CARD_BINDER_HANDLER, syncId, inv, CardStockComponents.CARD_BINDER.get(player).getInv(), 6);
+			return new CardBinderScreenHandler(stack, CardStock.CARD_BINDER_HANDLER, syncId, inv, CardStockComponents.CARD_BINDER.get(player).getInv(), 6);
 		}
 	}
 }
