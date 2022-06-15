@@ -1,5 +1,6 @@
 package repulica.cardstock;
 
+import com.mojang.serialization.Lifecycle;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -8,7 +9,10 @@ import net.minecraft.resource.ResourceType;
 import net.minecraft.screen.GenericContainerScreenHandler;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.DefaultedRegistry;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.RegistryKey;
+import net.minecraft.util.registry.SimpleRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.quiltmc.loader.api.ModContainer;
@@ -19,10 +23,14 @@ import org.quiltmc.qsl.networking.api.ServerPlayConnectionEvents;
 import org.quiltmc.qsl.resource.loader.api.ResourceLoader;
 import org.quiltmc.qsl.resource.loader.api.ResourcePackActivationType;
 import repulica.cardstock.api.CardManager;
+import repulica.cardstock.api.HolofoilType;
+import repulica.cardstock.api.SimpleHolofoilType;
 import repulica.cardstock.component.CardBinderInventory;
 import repulica.cardstock.data.CardManagerImpl;
 import repulica.cardstock.data.CardPackLootFunction;
 import repulica.cardstock.data.CardPullCriterion;
+import repulica.cardstock.holofoil.ColorHolofoil;
+import repulica.cardstock.holofoil.RainbowHolofoil;
 import repulica.cardstock.item.CardBinderItem;
 import repulica.cardstock.item.CardItem;
 import repulica.cardstock.item.CardPackItem;
@@ -43,6 +51,9 @@ public class CardStock implements ModInitializer {
 	public static ScreenHandlerType<CardBinderScreenHandler> CARD_BINDER_HANDLER;
 
 	public static final CardPullCriterion CARD_PULL = Criteria.register(new CardPullCriterion());
+
+	public static final HolofoilType<RainbowHolofoil> RAINBOW_FOIL = Registry.register(HolofoilType.HOLOFOIL_TYPES, new Identifier(MODID, "rainbow"),new SimpleHolofoilType<>(RainbowHolofoil.INSTANCE));
+	public static final HolofoilType<ColorHolofoil> COLOR_FOIL = Registry.register(HolofoilType.HOLOFOIL_TYPES, new Identifier(MODID, "color"), new ColorHolofoil.Type());
 
 	//todo: possible to be random card?
 	public static final ItemGroup CARDS_GROUP = QuiltItemGroup.builder(new Identifier(MODID, "cards"))

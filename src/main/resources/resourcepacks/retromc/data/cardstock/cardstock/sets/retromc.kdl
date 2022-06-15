@@ -20,6 +20,9 @@ card "appliedenergistics" {
 	}
 	artist "BluKat"
     date "2021"
+    holofoil "cardstock:color" {
+    	color 0x02afb8
+    }
 }
 card "biosphere" {
 	rarity 5

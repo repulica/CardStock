@@ -1,17 +1,15 @@
 package repulica.cardstock.api;
 
-import net.minecraft.util.Identifier;
+import dev.hbeck.kdl.objects.KDLNode;
+import net.minecraft.network.PacketByteBuf;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 //todo configurable foils
 //todo better foils storage
 //todo more stock foils
 //todo document
-@FunctionalInterface
 public interface Holofoil {
-	Map<Identifier, Holofoil> FOILS = new HashMap<>();
-
 	int getFoilColor(float yaw);
+	HolofoilType<?> getType();
 }

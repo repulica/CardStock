@@ -19,9 +19,7 @@ import net.minecraft.util.Identifier;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
 import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
 import repulica.cardstock.CardStock;
-import repulica.cardstock.api.Card;
-import repulica.cardstock.api.CardManager;
-import repulica.cardstock.api.CardSet;
+import repulica.cardstock.api.*;
 import repulica.cardstock.component.CardBinderComponent;
 import repulica.cardstock.component.CardBinderInventory;
 import repulica.cardstock.component.CardStockComponents;
@@ -42,7 +40,14 @@ public class CardManagerImpl implements CardManager {
 	private final CardSet defaultMissingnoSet;
 
 	public CardManagerImpl() {
-		this.defaultMissingno = new Card(1, new TranslatableText("text.cardstock.missingno"), new ArrayList<>(), "BluKat", "2021", RAINBOW_ID);
+		this.defaultMissingno = new Card(
+				1,
+				new TranslatableText("text.cardstock.missingno"),
+				new ArrayList<>(),
+				"BluKat",
+				"2021",
+				CardStock.RAINBOW_FOIL.fromKdl(new KDLDocument(new ArrayList<>()))
+		);
 		Map<String, Card> setMap = new HashMap<>();
 		setMap.put("missingno", defaultMissingno);
 		this.defaultMissingnoSet = new CardSet(new Identifier(CardStock.MODID, "textures/gui/missingno.png"), setMap);
@@ -166,7 +171,7 @@ public class CardManagerImpl implements CardManager {
 					if (node.getIdentifier().equals("emblem")) {
 						emblem = new Identifier(node.getArgs().get(0).getAsString().getValue());
 					} else if (node.getIdentifier().equals("card")) {
-						Identifier holofoil = RAINBOW_ID;
+						Holofoil holofoil = CardStock.RAINBOW_FOIL.fromKdl(new KDLDocument(new ArrayList<>()));
 						String name = node.getArgs().get(0).getAsString().getValue();
 						int rarity = 0;
 						Text info = new LiteralText("");
@@ -195,7 +200,8 @@ public class CardManagerImpl implements CardManager {
 										date = child.getArgs().get(0).getAsString().getValue();
 										break;
 									case "holofoil":
-										holofoil = new Identifier(node.getArgs().get(0).getAsString().getValue());
+										HolofoilType<?> foilType = HolofoilType.HOLOFOIL_TYPES.get(new Identifier(child.getArgs().get(0).getAsString().getValue()));
+										holofoil = foilType.fromKdl(child.getChild().orElse(new KDLDocument(new ArrayList<>())));
 										break;
 								}
 							}
@@ -214,6 +220,7 @@ public class CardManagerImpl implements CardManager {
 
 	private Text parseText(KDLNode node) {
 		//json hacks are the easiest thing to do here honestly
+		//todo allow props and children
 		if (node.getProps().size() == 0 && node.getChild().isPresent()) {
 			//just a list of texts
 			JsonArray arr = new JsonArray();
@@ -336,7 +343,11 @@ public class CardManagerImpl implements CardManager {
 				for (Text line : card.lore()) {
 					buf.writeText(line); //line of lore
 				}
-				buf.writeIdentifier(card.holofoil()); //holofoil type id
+				buf.writeIdentifier(HolofoilType.HOLOFOIL_TYPES.getId(card.holofoil().getType())); //holofoil type id
+				//noinspection rawtypes
+				HolofoilType type = card.holofoil().getType();
+				//noinspection unchecked
+				type.writeToPacket(card.holofoil(), buf);
 			}
 		}
 		return buf;
@@ -366,8 +377,10 @@ public class CardManagerImpl implements CardManager {
 				for (int k = 0; k < loreCount; k++) {
 					lore.add(buf.readText());
 				}
-				Identifier holofoil = buf.readIdentifier();
-				cards.put(name, new Card(rarity, info, lore, artist, date, holofoil));
+				Identifier typeId = buf.readIdentifier();
+				HolofoilType<?> type = HolofoilType.HOLOFOIL_TYPES.get(typeId);
+				Holofoil foil = type.readFromPacket(buf);
+				cards.put(name, new Card(rarity, info, lore, artist, date, foil));
 			}
 			sets.put(id, new CardSet(emblem, cards));
 		}

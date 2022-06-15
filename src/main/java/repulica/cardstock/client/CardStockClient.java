@@ -16,10 +16,13 @@ import org.quiltmc.qsl.networking.api.client.ClientPlayNetworking;
 import repulica.cardstock.CardStock;
 import repulica.cardstock.api.CardManager;
 import repulica.cardstock.api.Holofoil;
+import repulica.cardstock.api.HolofoilType;
+import repulica.cardstock.api.SimpleHolofoilType;
 import repulica.cardstock.client.model.CardModelGenerator;
 import repulica.cardstock.client.render.CardStockRenderLayers;
 import repulica.cardstock.client.screen.CardBinderScreen;
 import repulica.cardstock.data.CardManagerImpl;
+import repulica.cardstock.holofoil.RainbowHolofoil;
 
 import java.util.Collection;
 
@@ -33,12 +36,6 @@ public class CardStockClient implements ClientModInitializer {
 			model -> model.id = "cardstock card marker"
 	);
 	public static final CardModelGenerator CARD_MODEL_GENERATOR = new CardModelGenerator();
-
-	public static final Holofoil RAINBOW_FOIL = yaw -> {
-		float hue = (yaw % 360) / 360f;
-		if (hue < 0) hue += 1;
-		return MathHelper.hsvToRgb(hue, 0.5f, 1.0f);
-	};
 
 	@Override
 	public void onInitializeClient(ModContainer container) {
@@ -57,6 +54,5 @@ public class CardStockClient implements ClientModInitializer {
 		ClientPlayNetworking.registerGlobalReceiver(CardStock.CARD_SYNC, (server, handler, buf, responseSender) -> CardManagerImpl.INSTANCE.recievePacket(buf));
 		ColorProviderRegistry.ITEM.register(new CardColorProvider(), CardStock.CARD);
 		ColorProviderRegistry.ITEM.register((stack, tintIndex) -> tintIndex == 0? ((DyeableItem) stack.getItem()).getColor(stack) : 0xFFFFFF, CardStock.CARD_BINDER);
-		Holofoil.FOILS.put(new Identifier(CardStock.MODID, "rainbow"), RAINBOW_FOIL);
 	}
 }

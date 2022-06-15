@@ -1,5 +1,5 @@
 {
-  "parent": "cardstock:builtin/card",
+  "parent": "cardstock:item/reverse_holofoil_card",
   "textures": {
     "art": "cardstock:item/card_missingno"
   }
