@@ -3,28 +3,22 @@ package repulica.cardstock.client;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
-import net.minecraft.client.render.Shader;
 import net.minecraft.client.render.model.json.JsonUnbakedModel;
 import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.item.DyeableItem;
+import net.minecraft.resource.Resource;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
-import net.minecraft.util.math.MathHelper;
 import org.quiltmc.loader.api.ModContainer;
 import org.quiltmc.qsl.base.api.entrypoint.client.ClientModInitializer;
 import org.quiltmc.qsl.networking.api.client.ClientPlayNetworking;
 import repulica.cardstock.CardStock;
-import repulica.cardstock.api.CardManager;
-import repulica.cardstock.api.Holofoil;
-import repulica.cardstock.api.HolofoilType;
-import repulica.cardstock.api.SimpleHolofoilType;
 import repulica.cardstock.client.model.CardModelGenerator;
 import repulica.cardstock.client.render.CardStockRenderLayers;
 import repulica.cardstock.client.screen.CardBinderScreen;
 import repulica.cardstock.data.CardManagerImpl;
-import repulica.cardstock.holofoil.RainbowHolofoil;
 
-import java.util.Collection;
+import java.util.Map;
 
 public class CardStockClient implements ClientModInitializer {
 	private static final int START = "models/item/".length();
@@ -42,12 +36,12 @@ public class CardStockClient implements ClientModInitializer {
 		HandledScreens.register(CardStock.CARD_BINDER_HANDLER, CardBinderScreen::new);
 		CardStockRenderLayers.init();
 		ModelLoadingRegistry.INSTANCE.registerModelProvider((manager, consumer) -> {
-			Collection<Identifier> cards = manager.findResources("models/item/card", string -> string.endsWith(".json"));
-			for (Identifier id : cards) {
+			Map<Identifier, Resource> cards = manager.findResources("models/item/card", id -> id.getPath().endsWith(".json"));
+			for (Identifier id : cards.keySet()) {
 				consumer.accept(new ModelIdentifier(new Identifier(id.getNamespace(), id.getPath().substring(START, id.getPath().length() - JSON_END)), "inventory"));
 			}
-			Collection<Identifier> packs = manager.findResources("models/item/pack", string -> string.endsWith(".json"));
-			for (Identifier id : packs) {
+			Map<Identifier, Resource> packs = manager.findResources("models/item/pack", id -> id.getPath().endsWith(".json"));
+			for (Identifier id : packs.keySet()) {
 				consumer.accept(new ModelIdentifier(new Identifier(id.getNamespace(), id.getPath().substring(START, id.getPath().length() - JSON_END)), "inventory"));
 			}
 		});

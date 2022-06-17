@@ -37,21 +37,8 @@ dependencies {
 	})
 	modImplementation "org.quiltmc:quilt-loader:${project.loader_version}"
 
-	// Fabric API. This is technically optional, but you probably want it anyway.
-	modImplementation "org.quiltmc.qsl.item:item_group:${project.qsl_item_group_version}+${project.minecraft_version}"
-	modImplementation "org.quiltmc.qsl.core:networking:${project.qsl_networking_version}+${project.minecraft_version}"
-	modImplementation "org.quiltmc.qsl.core:resource_loader:${project.qsl_resource_loader_version}+${project.minecraft_version}"
-	modImplementation "org.quiltmc.qsl.gui:tooltip:${project.qsl_tooltip_version}+${project.minecraft_version}"
-	modImplementation "org.quiltmc.quilted-fabric-api:fabric-loot-tables-v1:${project.qfapi_version}-${project.minecraft_version}"
-	modImplementation "org.quiltmc.quilted-fabric-api:fabric-models-v0:${project.qfapi_version}-${project.minecraft_version}"
-	modRuntimeOnly "org.quiltmc.quilted-fabric-api:fabric-networking-api-v1:${project.qfapi_version}-${project.minecraft_version}"
-	modImplementation "org.quiltmc.quilted-fabric-api:fabric-object-builder-api-v1:${project.qfapi_version}-${project.minecraft_version}"
-	modImplementation "org.quiltmc.quilted-fabric-api:fabric-registry-sync-v0:${project.qfapi_version}-${project.minecraft_version}"
-	modImplementation "org.quiltmc.quilted-fabric-api:fabric-renderer-api-v1:${project.qfapi_version}-${project.minecraft_version}"
-	modImplementation "org.quiltmc.quilted-fabric-api:fabric-renderer-indigo:${project.qfapi_version}-${project.minecraft_version}"
-	modImplementation "org.quiltmc.quilted-fabric-api:fabric-rendering-v1:${project.qfapi_version}-${project.minecraft_version}"
-	modImplementation "org.quiltmc.quilted-fabric-api:fabric-screen-handler-api-v1:${project.qfapi_version}-${project.minecraft_version}"
-	modImplementation "org.quiltmc.quilted-fabric-api:fabric-transitive-access-wideners-v1:${project.qfapi_version}-${project.minecraft_version}"
+	modImplementation "org.quiltmc:qsl:${project.qsl_version}+${project.minecraft_version}"
+	modImplementation "org.quiltmc.quilted-fabric-api:quilted-fabric-api:${project.qfapi_version}-${project.minecraft_version}"
 
 	modImplementation include("dev.onyxstudios.cardinal-components-api:cardinal-components-base:${project.cardinal_version}") { transitive = false }
 	modImplementation include("dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${project.cardinal_version}") { transitive = false }

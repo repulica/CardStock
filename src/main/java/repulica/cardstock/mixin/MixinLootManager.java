@@ -9,7 +9,6 @@ import dev.hbeck.kdl.objects.KDLValue;
 import dev.hbeck.kdl.parse.KDLParser;
 import it.unimi.dsi.fastutil.ints.Int2IntArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
-import net.fabricmc.fabric.api.loot.v1.FabricLootPoolBuilder;
 import net.minecraft.loot.*;
 import net.minecraft.loot.entry.ItemEntry;
 import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
@@ -41,11 +40,12 @@ public class MixinLootManager {
 
 	@Inject(method = "apply(Ljava/util/Map;Lnet/minecraft/resource/ResourceManager;Lnet/minecraft/util/profiler/Profiler;)V", at = @At(value="INVOKE", target="Lcom/google/common/collect/ImmutableMap$Builder;build()Lcom/google/common/collect/ImmutableMap;"), locals = LocalCapture.CAPTURE_FAILEXCEPTION)
 	private void injectCardPackTables(Map<Identifier, JsonElement> jsons, ResourceManager manager, Profiler profiler, CallbackInfo info, ImmutableMap.Builder<Identifier, LootTable> tableMap) {
-		Collection<Identifier> ids = manager.findResources("cardstock/packs", path -> path.endsWith(".kdl"));
-		for (Identifier id : ids) {
+		Map<Identifier, Resource> resources = manager.findResources("cardstock/packs", id -> id.getPath().endsWith(".kdl"));
+		for (Identifier id : resources.keySet()) {
 			Identifier tableId = new Identifier(id.getNamespace(), id.getPath().substring(PREFIX_LENGTH, id.getPath().length() - SUFFIX_LENGTH));
-			try (Resource res = manager.method_14486(id)){
-				KDLDocument doc = PARSER.parse(res.getInputStream());
+			Resource res = resources.get(id);
+			try {
+				KDLDocument doc = PARSER.parse(res.open());
 				CardPack pack = parsePackDoc(tableId, doc);
 				int bonuses = 0;
 				for (CardPack.Bonus bonus : pack.bonuses()) {
@@ -56,20 +56,20 @@ public class MixinLootManager {
 				}
 				int rawPulls = pack.cardCount() - bonuses;
 				LootTable.Builder builder = new LootTable.Builder();
-				FabricLootPoolBuilder mainPool = FabricLootPoolBuilder.builder().rolls(ConstantLootNumberProvider.create(rawPulls));
+				LootPool.Builder mainPool = new LootPool.Builder().rolls(ConstantLootNumberProvider.create(rawPulls));
 				for (int rarity : pack.weights().keySet()) {
 					int weight = pack.weights().get(rarity);
-					mainPool.withEntry(ItemEntry.builder(CardStock.CARD).weight(weight).apply(CardPackLootFunction.builder(pack.set(), rarity, null)).build());
+					mainPool.with(ItemEntry.builder(CardStock.CARD).weight(weight).apply(CardPackLootFunction.builder(pack.set(), rarity, null)));
 				}
 				builder.pool(mainPool);
 				for (CardPack.Bonus bonus : pack.bonuses()) {
-					FabricLootPoolBuilder pool = FabricLootPoolBuilder.builder().rolls(ConstantLootNumberProvider.create(bonus.getCount()));
-					pool.withEntry(
+					LootPool.Builder pool = new LootPool.Builder().rolls(ConstantLootNumberProvider.create(bonus.getCount()));
+					pool.with(
 							ItemEntry.builder(CardStock.CARD).apply(CardPackLootFunction.builder(
 									pack.set(),
 									bonus.getRarity(),
 									new Pair<>(bonus.getBanner(), bonus.getBannerChance())
-							)).build()
+							))
 					);
 					builder.pool(pool);
 				}

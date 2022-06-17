@@ -12,9 +12,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.resource.Resource;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
 import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
@@ -42,7 +40,7 @@ public class CardManagerImpl implements CardManager {
 	public CardManagerImpl() {
 		this.defaultMissingno = new Card(
 				1,
-				new TranslatableText("text.cardstock.missingno"),
+				Text.translatable("text.cardstock.missingno"),
 				new ArrayList<>(),
 				"BluKat",
 				"2021",
@@ -160,11 +158,12 @@ public class CardManagerImpl implements CardManager {
 		sets.clear();
 		sets.put(new Identifier(CardStock.MODID, "missingno"), defaultMissingnoSet);
 		int cardCount = 1;
-		Collection<Identifier> ids = manager.findResources(PREFIX, path -> path.endsWith(".kdl"));
-		for (Identifier id : ids) {
+		Map<Identifier, Resource> resources = manager.findResources(PREFIX, id -> id.getPath().endsWith(".kdl"));
+		for (Identifier id : resources.keySet()) {
 			Identifier setId = new Identifier(id.getNamespace(), id.getPath().substring(PREFIX.length() + 1, id.getPath().length() - SUFFIX_LENGTH));
-			try (Resource res = manager.method_14486(id)) {
-				KDLDocument doc = PARSER.parse(res.getInputStream());
+			Resource res = resources.get(id);
+			try {
+				KDLDocument doc = PARSER.parse(res.open());
 				Identifier emblem = new Identifier(id.getNamespace(), "textures/cardstock/emblem/" + setId.getPath() + ".png");
 				Map<String, Card> parsedCards = new HashMap<>();
 				for (KDLNode node : doc.getNodes()) {
@@ -174,7 +173,7 @@ public class CardManagerImpl implements CardManager {
 						Holofoil holofoil = CardStock.RAINBOW_FOIL.fromKdl(new KDLDocument(new ArrayList<>()));
 						String name = node.getArgs().get(0).getAsString().getValue();
 						int rarity = 0;
-						Text info = new LiteralText("");
+						Text info = Text.literal("");
 						List<Text> lore = new ArrayList<>();
 						String artist = "";
 						String date = "";

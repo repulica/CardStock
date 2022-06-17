@@ -5,11 +5,9 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.DyeableItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.screen.GenericContainerScreenHandler;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
@@ -42,7 +40,7 @@ public class CardBinderItem extends Item implements DyeableItem {
 
 		@Override
 		public Text getDisplayName() {
-			return new TranslatableText("item.cardstock.card_binder");
+			return Text.translatable("item.cardstock.card_binder");
 		}
 
 		@Nullable

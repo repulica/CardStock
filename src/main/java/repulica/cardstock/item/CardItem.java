@@ -6,9 +6,7 @@ import net.minecraft.client.item.TooltipData;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtElement;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Rarity;
 import net.minecraft.world.World;
@@ -39,7 +37,7 @@ public class CardItem extends Item {
 	@Override
 	public Text getName(ItemStack stack) {
 		if (stack.hasNbt() && stack.getOrCreateNbt().contains("Card", NbtElement.STRING_TYPE)) {
-			return new TranslatableText("card." + stack.getOrCreateNbt().getString("Card")
+			return Text.translatable("card." + stack.getOrCreateNbt().getString("Card")
 					.replace(':', '.')
 					.replace('/', '.')
 			);
@@ -50,21 +48,21 @@ public class CardItem extends Item {
 	@Override
 	public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
 		super.appendTooltip(stack, world, tooltip, context);
-		tooltip.add(new LiteralText(""));
+		tooltip.add(Text.literal(""));
 		Card card = CardManager.INSTANCE.getCard(stack);
 		if (!card.toString().equals("")) tooltip.add(card.info());
 		if (Screen.hasShiftDown()) {
 			for (Text line : card.lore()) {
-				tooltip.add(new LiteralText("  ").append(line));
+				tooltip.add(Text.literal("  ").append(line));
 			}
 			if (card.artist() != null) {
-				tooltip.add(new TranslatableText("text.cardstock.artist", card.artist(), card.date()).formatted(Formatting.GRAY));
+				tooltip.add(Text.translatable("text.cardstock.artist", card.artist(), card.date()).formatted(Formatting.GRAY));
 			}
 		} else {
-			tooltip.add(new TranslatableText("text.cardstock.more").formatted(Formatting.GRAY));
+			tooltip.add(Text.translatable("text.cardstock.more").formatted(Formatting.GRAY));
 		}
 		if (context.isAdvanced()) {
-			tooltip.add(new TranslatableText("text.cardstock.source").formatted(Formatting.BLUE, Formatting.ITALIC));
+			tooltip.add(Text.translatable("text.cardstock.source").formatted(Formatting.BLUE, Formatting.ITALIC));
 		}
 	}
 

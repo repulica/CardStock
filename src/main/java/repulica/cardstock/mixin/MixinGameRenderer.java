@@ -10,8 +10,9 @@ import repulica.cardstock.client.render.CardStockRenderLayers;
 
 @Mixin(GameRenderer.class)
 public class MixinGameRenderer {
-	@Inject(method="renderWorld", at = @At("TAIL"))
-	private void injectRender(float tickDelta, long limitTime, MatrixStack matrices, CallbackInfo info) {
-		CardStockRenderLayers.getConsumer().draw(CardStockRenderLayers.CARD_GLITTER);
-	}
+	//this is all broken now
+//	@Inject(method="renderWorld", at = @At("TAIL"))
+//	private void injectRender(float tickDelta, long limitTime, MatrixStack matrices, CallbackInfo info) {
+//		CardStockRenderLayers.getConsumer().draw(CardStockRenderLayers.CARD_GLITTER);
+//	}
 }

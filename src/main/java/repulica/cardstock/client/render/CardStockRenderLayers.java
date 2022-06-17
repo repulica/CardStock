@@ -1,6 +1,9 @@
 package repulica.cardstock.client.render;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.blaze3d.vertex.VertexFormats;
 import net.minecraft.client.render.*;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
@@ -14,20 +17,22 @@ public class CardStockRenderLayers extends RenderLayer {
 	private static VertexConsumerProvider.Immediate CONSUMER;
 	protected static final Identifier CARD_GLITTER_TEXTURE = new Identifier(CardStock.MODID, "textures/misc/card_glitter.png");
 	protected static final Texturing CARD_GLITTER_TEXTURING = new Texturing("card_glitter_texturing", () -> setupCardGlitterTexturing(8.0F), RenderSystem::resetTextureMatrix);
-	public static final RenderLayer CARD_GLITTER = RenderLayer.of(
-			"card_glitter",
-			VertexFormats.POSITION_TEXTURE,
-			VertexFormat.DrawMode.QUADS,
-			256, true, true,
-			RenderLayer.MultiPhaseParameters.builder()
-					.shader(GLINT_SHADER)
-					.texture(new RenderPhase.Texture(CARD_GLITTER_TEXTURE, true, false))
-					.writeMaskState(COLOR_MASK)
-					.cull(DISABLE_CULLING)
-					.depthTest(EQUAL_DEPTH_TEST)
-					.transparency(GLINT_TRANSPARENCY)
-					.texturing(CARD_GLITTER_TEXTURING)
-					.build(false));
+	//this probably needs a lot of access widening now
+//	public static final RenderLayer CARD_GLITTER = RenderLayer.of(
+//			"card_glitter",
+//			VertexFormats.POSITION_TEXTURE,
+//			VertexFormat.DrawMode.QUADS,
+//			256, true, true,
+//			RenderLayer.MultiPhaseParameters.builder()
+//					.shader(GLINT_SHADER)
+//					.texture(new RenderPhase.Texture(CARD_GLITTER_TEXTURE, true, false))
+//					.writeMaskState(COLOR_MASK)
+//					.cull(DISABLE_CULLING)
+//					.depthTest(EQUAL_DEPTH_TEST)
+//					.transparency(GLINT_TRANSPARENCY)
+//					.texturing(CARD_GLITTER_TEXTURING)
+//					.build(false));
+	public static final RenderLayer CARD_GLITTER = null;
 
 	public CardStockRenderLayers(String string, VertexFormat vertexFormat, VertexFormat.DrawMode drawMode, int i, boolean bl, boolean bl2, Runnable runnable, Runnable runnable2) {
 		super(string, vertexFormat, drawMode, i, bl, bl2, runnable, runnable2);
@@ -50,6 +55,6 @@ public class CardStockRenderLayers extends RenderLayer {
 	}
 
 	public static void init() {
-		CONSUMER = VertexConsumerProvider.immediate(Map.of(CARD_GLITTER, new BufferBuilder(256)), new BufferBuilder(256));
+//		CONSUMER = VertexConsumerProvider.immediate(Map.of(CARD_GLITTER, new BufferBuilder(256)), new BufferBuilder(256));
 	}
 }

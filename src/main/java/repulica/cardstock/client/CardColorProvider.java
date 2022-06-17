@@ -39,8 +39,8 @@ public class CardColorProvider implements ItemColorProvider {
 					yaw = 360 - (playerYaw - yaw);
 				}
 			}
-		} else if (stack.getHolder() instanceof ItemEntity) {
-			yaw = (float) Math.toDegrees(((ItemEntity) stack.getHolder()).getRotation(MinecraftClient.getInstance().getTickDelta())) % 360F;
+		} else if (stack.getEntityHolder() instanceof ItemEntity) {
+			yaw = (float) Math.toDegrees(((ItemEntity) stack.getEntityHolder()).getRotation(MinecraftClient.getInstance().getTickDelta())) % 360F;
 			if (MinecraftClient.getInstance().player != null) {
 				float playerYaw = MinecraftClient.getInstance().player.getYaw();
 				if (yaw >= playerYaw) {
@@ -49,8 +49,8 @@ public class CardColorProvider implements ItemColorProvider {
 					yaw = 360 - (playerYaw - yaw);
 				}
 			}
-		} else if (stack.getHolder() != null) {
-			yaw = stack.getHolder().getYaw();
+		} else if (stack.getEntityHolder() != null) {
+			yaw = stack.getEntityHolder().getYaw();
 			if (MinecraftClient.getInstance().player != null) {
 				float playerYaw = MinecraftClient.getInstance().player.getYaw();
 				if (yaw >= playerYaw) {
