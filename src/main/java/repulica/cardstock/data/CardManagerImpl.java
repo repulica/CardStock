@@ -44,7 +44,8 @@ public class CardManagerImpl implements CardManager {
 				new ArrayList<>(),
 				"BluKat",
 				"2021",
-				CardStock.RAINBOW_FOIL.fromKdl(new KDLDocument(new ArrayList<>()))
+				CardStock.RAINBOW_FOIL.fromKdl(new KDLDocument(new ArrayList<>())),
+				new HashSet<>()
 		);
 		Map<String, Card> setMap = new HashMap<>();
 		setMap.put("missingno", defaultMissingno);
@@ -91,7 +92,7 @@ public class CardManagerImpl implements CardManager {
 	}
 
 	@Override
-	public List<Card> getAllHeldCards(PlayerEntity player) {
+	public List<Card> getAllHeldCards(PlayerEntity player, boolean includeEnderBinder) {
 		List<Card> cards = new ArrayList<>();
 		PlayerInventory inv = player.getInventory();
 		if (!inv.isEmpty()) {
@@ -104,12 +105,12 @@ public class CardManagerImpl implements CardManager {
 				}
 			}
 		}
-		addBinderCards(cards, CardStockComponents.CARD_BINDER.get(player));
+		if (includeEnderBinder) addBinderCards(cards, CardStockComponents.CARD_BINDER.get(player));
 		return cards;
 	}
 
 	@Override
-	public List<Card> getHeldSetCards(PlayerEntity player, Identifier setId) {
+	public List<Card> getHeldSetCards(PlayerEntity player, Identifier setId, boolean includeEnderBinder) {
 		CardSet set = getSet(setId);
 		List<Card> cards = new ArrayList<>();
 		PlayerInventory inv = player.getInventory();
@@ -125,21 +126,30 @@ public class CardManagerImpl implements CardManager {
 				}
 			}
 		}
-		addBinderSetCards(cards, CardStockComponents.CARD_BINDER.get(player), set);
+		if (includeEnderBinder) addBinderSetCards(cards, CardStockComponents.CARD_BINDER.get(player), set);
 		return cards;
 	}
 
 	@Override
-	public float getHeldSetProgress(PlayerEntity player, Identifier setId) {
-		Set<Card> cards = new HashSet<>(getHeldSetCards(player, setId));
+	public float getHeldSetProgress(PlayerEntity player, Identifier setId, boolean includeEnderBinder) {
+		Set<Card> cards = new HashSet<>(getHeldSetCards(player, setId, includeEnderBinder));
 		CardSet set = getSet(setId);
 		return (float) cards.size() / (float) set.getCards().size();
 	}
 
 	@Override
-	public boolean hasCard(PlayerEntity player, Identifier cardId) {
+	public boolean hasCard(PlayerEntity player, Identifier cardId, boolean includeEnderBinder) {
 		Card card = getCard(cardId);
-		return getAllHeldCards(player).contains(card);
+		return getAllHeldCards(player, includeEnderBinder).contains(card);
+	}
+
+	@Override
+	public boolean hasKeyword(PlayerEntity player, Identifier keywordId, boolean includeEnderBinder) {
+		Set<Card> cards = new HashSet<>(getAllHeldCards(player, includeEnderBinder));
+		for (Card card : cards) {
+			if (card.keywords().contains(keywordId)) return true;
+		}
+		return false;
 	}
 
 	@Override
@@ -177,6 +187,7 @@ public class CardManagerImpl implements CardManager {
 						List<Text> lore = new ArrayList<>();
 						String artist = "";
 						String date = "";
+						Set<Identifier> keywords = new HashSet<>();
 						Optional<KDLDocument> children = node.getChild();
 						if (children.isPresent()) {
 							for (KDLNode child : children.get().getNodes()) {
@@ -202,10 +213,16 @@ public class CardManagerImpl implements CardManager {
 										HolofoilType<?> foilType = HolofoilType.HOLOFOIL_TYPES.get(new Identifier(child.getArgs().get(0).getAsString().getValue()));
 										holofoil = foilType.fromKdl(child.getChild().orElse(new KDLDocument(new ArrayList<>())));
 										break;
+									case "keywords":
+										for (KDLValue<?> val : child.getArgs()) {
+											if (val.isString()) {
+												keywords.add(new Identifier(val.getAsString().getValue()));
+											}
+										}
 								}
 							}
 						}
-						parsedCards.put(name, new Card(rarity, info, lore, artist, date, holofoil));
+						parsedCards.put(name, new Card(rarity, info, lore, artist, date, holofoil, keywords));
 						cardCount++;
 					}
 				}
@@ -219,7 +236,7 @@ public class CardManagerImpl implements CardManager {
 
 	private Text parseText(KDLNode node) {
 		//json hacks are the easiest thing to do here honestly
-		//todo allow props and children
+		//todo full jik
 		if (node.getProps().size() == 0 && node.getChild().isPresent()) {
 			//just a list of texts
 			JsonArray arr = new JsonArray();
@@ -347,6 +364,10 @@ public class CardManagerImpl implements CardManager {
 				HolofoilType type = card.holofoil().getType();
 				//noinspection unchecked
 				type.writeToPacket(card.holofoil(), buf);
+				buf.writeVarInt(card.keywords().size());
+				for (Identifier keyword : card.keywords()) {
+					buf.writeIdentifier(keyword);
+				}
 			}
 		}
 		return buf;
@@ -379,7 +400,12 @@ public class CardManagerImpl implements CardManager {
 				Identifier typeId = buf.readIdentifier();
 				HolofoilType<?> type = HolofoilType.HOLOFOIL_TYPES.get(typeId);
 				Holofoil foil = type.readFromPacket(buf);
-				cards.put(name, new Card(rarity, info, lore, artist, date, foil));
+				Set<Identifier> keywords = new HashSet<>();
+				int keywordCount = buf.readVarInt();
+				for (int k = 0; k < keywordCount; k++) {
+					keywords.add(buf.readIdentifier());
+				}
+				cards.put(name, new Card(rarity, info, lore, artist, date, foil, keywords));
 			}
 			sets.put(id, new CardSet(emblem, cards));
 		}

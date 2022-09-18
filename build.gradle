@@ -27,6 +27,7 @@ repositories {
 	}
 	mavenLocal()
 	maven { url "https://ladysnake.jfrog.io/artifactory/mods" }
+	maven { url "https://repo.unascribed.com" }
 }
 
 dependencies {
@@ -43,7 +44,7 @@ dependencies {
 	modImplementation include("dev.onyxstudios.cardinal-components-api:cardinal-components-base:${project.cardinal_version}") { transitive = false }
 	modImplementation include("dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${project.cardinal_version}") { transitive = false }
 	modImplementation include("dev.onyxstudios.cardinal-components-api:cardinal-components-item:${project.cardinal_version}") { transitive = false }
-	implementation include("dev.hbeck.kdl:kdl4j:0.1.0")
+	implementation include("dev.hbeck.kdl:kdl4j:0.2.0")
 }
 
 java {

@@ -8,6 +8,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -54,6 +55,12 @@ public class CardItem extends Item {
 		if (Screen.hasShiftDown()) {
 			for (Text line : card.lore()) {
 				tooltip.add(Text.literal("  ").append(line));
+			}
+			if (!card.keywords().isEmpty()) {
+				tooltip.add(Text.literal("  ").append(Text.translatable("text.cardstock.keywords").formatted(Formatting.GRAY)));
+				for (Identifier id : card.keywords()) {
+					tooltip.add(Text.literal("  - ").formatted(Formatting.GRAY).append(Text.translatable(id.method_42093("keyword").formatted(Formatting.GREEN))));
+				}
 			}
 			if (card.artist() != null) {
 				tooltip.add(Text.translatable("text.cardstock.artist", card.artist(), card.date()).formatted(Formatting.GRAY));
